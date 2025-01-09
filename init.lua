@@ -1,10 +1,13 @@
-vim.g.mapleader = " "  -- Set leader key to space
+local keymap = vim.keymap.set
+local opts = {
+    noremap = true,
+    silent = true
+}
 
-require("config.remap")
+
+keymap("n", "<Space>", "", opts)
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 require("config.config")
-
-if vim.g.vscode then
-    require("config.vscode_config")
-else
-end
 require("config.lazy")
