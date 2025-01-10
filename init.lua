@@ -4,10 +4,12 @@ local opts = {
     silent = true
 }
 
-
-keymap("n", "<Space>", "", opts)
+keymap("n", "<space>", "", opts)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+
+
 require("config.config")
+require("config.set")
 require("config.lazy")
