@@ -1,6 +1,4 @@
 --  TODO: DIAGNOSTICS ARE MISSING
-
-
 local vscode = require('vscode')
 local opts = {
     noremap = true,
@@ -178,8 +176,26 @@ return {
             elseif is_windows then
             end
 
+            -- Move cursor to position on screen
 
+            local zzvscode = function()
+                vscode.action('revealLine', {
+                    args = {
+                        at = 'center',
+                        lineNumber = vim.api.nvim_win_get_cursor(0)[1]
+                    }
+                })
+            end
 
+            vim.keymap.set('n', 'n', function()
+                vim.cmd('normal! n')
+                zzvscode()
+            end, opts)
+
+            vim.keymap.set('n', 'N', function()
+                vim.cmd('normal! N')
+                zzvscode()
+            end, opts)
 
         else
             vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, opts) -- Example: open netrw in standalone Neovim
@@ -191,7 +207,6 @@ return {
                 noremap = true
             })
         end
-
     end
 }
 
@@ -208,3 +223,4 @@ return {
 -- keymap({"n", "v"}, "<leader>h7", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor7')<CR>")
 -- keymap({"n", "v"}, "<leader>h8", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor8')<CR>")
 -- keymap({"n", "v"}, "<leader>h9", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor9')<CR>")
+
