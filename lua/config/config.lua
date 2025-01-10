@@ -3,10 +3,7 @@ local opts = {
     noremap = true,
     silent = true
 }
-local vscode = require('vscode')
-vim.notify = vscode.notify
 vim.g.clipboard = vim.g.vscode_clipboard
-
 vim.opt.scrolloff = 8
 vim.o.hlsearch = false -- Highlight search results
 vim.o.incsearch = true -- Enable incremental search
@@ -14,11 +11,11 @@ vim.o.termguicolors = true -- Enable true colors
 vim.o.cmdheight = 1
 vim.opt.guifont = "MesloLGS NF:h11" -- h11 sets the font size to 11
 
-
 vim.keymap.set('n', 'x', '"_x', opts)
 
 if vim.g.vscode then
-    vim.notify = vscode.notify
+    vim.notify = require("vscode").notify
+    vim.g.clipboard = vim.g.vscode_clipboard
 else
     vim.o.guifont = 'Meslo Nerd Font'
     vim.o.number = true -- Show line numbers

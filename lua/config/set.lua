@@ -1,12 +1,12 @@
 --  TODO: DIAGNOSTICS ARE MISSING
-local vscode = require('vscode')
+if vim.g.vscode then
+    local vscode = require('vscode')
+end
 local opts = {
     noremap = true,
     silent = true
 }
 
-vim.notify = vscode.notify
-vim.g.clipboard = vim.g.vscode_clipboard
 
 local is_windows = vim.loop.os_uname().sysname == "Windows_NT"
 local is_macos = vim.loop.os_uname().sysname == "Darwin"
