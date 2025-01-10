@@ -15,10 +15,10 @@ vim.o.cmdheight = 1
 vim.opt.guifont = "MesloLGS NF:h11" -- h11 sets the font size to 11
 
 
+vim.keymap.set('n', 'x', '"_x', opts)
 
 if vim.g.vscode then
     vim.notify = vscode.notify
-
 else
     vim.o.guifont = 'Meslo Nerd Font'
     vim.o.number = true -- Show line numbers
@@ -30,5 +30,4 @@ else
     vim.opt.smartindent = true
     vim.opt.swapfile = false
     vim.opt.backup = false
-    vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, opts) -- Example: open netrw in standalone Neovim
 end

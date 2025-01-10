@@ -11,5 +11,5 @@ vim.g.maplocalleader = " "
 
 
 require("config.config")
-require("config.set")
+require("config.set").setup()
 require("config.lazy")

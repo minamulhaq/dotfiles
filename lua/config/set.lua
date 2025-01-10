@@ -1,117 +1,210 @@
-local keymap = vim.keymap.set
+--  TODO: DIAGNOSTICS ARE MISSING
+
+
+local vscode = require('vscode')
 local opts = {
     noremap = true,
     silent = true
 }
 
-keymap("v", "J", ":m '>+1<CR>gv=gv") -- Move selection down
-keymap("v", "K", ":m '<-2<CR>gv=gv") -- Move selection up
+vim.notify = vscode.notify
+vim.g.clipboard = vim.g.vscode_clipboard
 
-keymap("n", "<C-d>", "<C-d>zz", opts)
-keymap("n", "<C-u>", "<C-u>zz", opts)
-
-if vim.g.vscode then
-    -- VSCode-specific mappings for n and N with centering
-    vim.keymap.set("n", "n", function()
-        vim.cmd("normal! nzz") -- Move to next search result
-    end, opts)
-    vim.keymap.set("n", "N", function()
-        vim.cmd("normal! N") -- Move to previous search result
-    end, opts)
-else
-    vim.keymap.set("n", "n", "nzzzv", opts)
-    vim.keymap.set("n", "N", "Nzzzv", opts)
-end
-
-
-
-keymap({ "n", "v" }, "<leader>p", '"+p', opts)
-keymap("x", "<leader>p", "\"_d", opts) -- Replace without overwriting clipboard
-keymap({'n', 'v'}, "<leader>y", "\"+y", opts)
--- keymap({'n','v'}, 'p', 'P', opts) -- Paste without overwriting register
--- keymap('n', '<leader>w', ':w<CR>', opts)
--- keymap('n', '<Esc>', ':nohlsearch<CR>', opts)
-
--- -- Yank into system clipboard
--- keymap({"n", "v"}, "<leader>y", [["+y]], opts)
--- keymap("n", "<leader>Y", [["+Y]], opts)
-
--- -- Paste from system clipboard
--- keymap("n", "<leader>p", [["+p]], opts)
-
-keymap('x', '<', '<gv', {
-    desc = 'Reselect visual block after reducing indenting',
-    noremap = true
-})
-keymap('x', '>', '>gv|', {
-    desc = 'Reselect visual block after increasing indenting',
-    noremap = true
-})
-
--- smart up and down
-vim.keymap.set('n', '<down>', 'gj', {
-    desc = 'Move down in wrapped lines',
-    silent = true,
-    remap = true
-})
-vim.keymap.set('n', '<up>', 'gk', {
-    desc = 'Move up in wrapped lines',
-    silent = true,
-    remap = true
-})
-
--- Load OS-specific remap files
 local is_windows = vim.loop.os_uname().sysname == "Windows_NT"
 local is_macos = vim.loop.os_uname().sysname == "Darwin"
 
-if is_macos then
-    print("macos confs loading")
-    vim.keymap.set('n', '<D-w>', ':q<CR>', opts)
-elseif is_windows then
-    vim.keymap.set('n', '<C-w>', ':q<CR>', opts)
-end
+return {
+    setup = function()
+        vim.keymap.set('v', 'p', '"_dP', opts)
 
-if vim.g.vscode then
-    -- call vscode commands from neovim
-    -- general keymaps
+        -- Yank to system clipboard
+        vim.keymap.set('v', '<leader>y', '"+y', {
+            noremap = true,
+            silent = true,
+            desc = 'Yank selection to clipboard'
+        })
+        vim.keymap.set('n', '<leader>Y', '"+yg_', {
+            noremap = true,
+            silent = true,
+            desc = 'Yank line to clipboard excluding newline'
+        })
+        vim.keymap.set('n', '<leader>y', '"+y', {
+            noremap = true,
+            silent = true,
+            desc = 'Yank to clipboard'
+        })
 
-    -- harpoon keymaps
-    -- keymap({"n", "v"}, "<leader>ha", "<cmd>lua require('vscode').action('vscode-harpoon.addEditor')<CR>")
-    -- keymap({"n", "v"}, "<leader>ho", "<cmd>lua require('vscode').action('vscode-harpoon.editorQuickPick')<CR>")
-    -- keymap({"n", "v"}, "<leader>he", "<cmd>lua require('vscode').action('vscode-harpoon.editEditors')<CR>")
-    -- keymap({"n", "v"}, "<leader>h1", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor1')<CR>")
-    -- keymap({"n", "v"}, "<leader>h2", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor2')<CR>")
-    -- keymap({"n", "v"}, "<leader>h3", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor3')<CR>")
-    -- keymap({"n", "v"}, "<leader>h4", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor4')<CR>")
-    -- keymap({"n", "v"}, "<leader>h5", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor5')<CR>")
-    -- keymap({"n", "v"}, "<leader>h6", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor6')<CR>")
-    -- keymap({"n", "v"}, "<leader>h7", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor7')<CR>")
-    -- keymap({"n", "v"}, "<leader>h8", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor8')<CR>")
-    -- keymap({"n", "v"}, "<leader>h9", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor9')<CR>")
+        -- Paste from system clipboard
+        vim.keymap.set('n', '<leader>p', '"+p', {
+            noremap = true,
+            silent = true,
+            desc = 'Paste after cursor from clipboard'
+        })
+        vim.keymap.set('n', '<leader>P', '"+P', {
+            noremap = true,
+            silent = true,
+            desc = 'Paste before cursor from clipboard'
+        })
+        vim.keymap.set('v', '<leader>p', '"+p', {
+            noremap = true,
+            silent = true,
+            desc = 'Paste after selection from clipboard'
+        })
+        vim.keymap.set('v', '<leader>P', '"+P', {
+            noremap = true,
+            silent = true,
+            desc = 'Paste before selection from clipboard'
+        })
 
-    -- splits and naivagation
-    keymap({"n", "v"}, "<leader>v", "<cmd>lua require('vscode').action('workbench.action.splitEditorRight')<CR>")
-    keymap("n", "<leader>h", "<cmd>lua require('vscode').action('workbench.action.navigateLeft')<CR>")
-    keymap("n", "<leader>l", "<cmd>lua require('vscode').action('workbench.action.navigateRight')<CR>")
+        vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", {
+            desc = 'Move selection down',
+            noremap = true
+        })
+        vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", {
+            desc = 'Move selection up',
+            noremap = true
+        })
 
-    keymap({"n", "v"}, "<leader>b", "<cmd>lua require('vscode').action('editor.debug.action.toggleBreakpoint')<CR>")
-    keymap({"n", "v"}, "<leader>a", "<cmd>lua require('vscode').action('editor.action.quickFix')<CR>")
-    keymap({"n", "v"}, "<leader>sp", "<cmd>lua require('vscode').action('workbench.actions.view.problems')<CR>")
-    keymap({"n", "v"}, "<leader>fd", "<cmd>lua require('vscode').action('editor.action.formatDocument')<CR>")
+        -- Select blocks after indenting
+        vim.keymap.set('x', '<', '<gv', {
+            desc = 'Reselect visual block after reducing indenting',
+            noremap = true
+        })
+        vim.keymap.set('x', '>', '>gv|', {
+            desc = 'Reselect visual block after increasing indenting',
+            noremap = true
+        })
 
-    -- Hightlight on yank
-    -- Highlight yanked text
-    vim.api.nvim_create_augroup("highlight_yank", {})
-    vim.api.nvim_create_autocmd("TextYankPost", {
-        group = "highlight_yank",
-        callback = function()
-            vim.highlight.on_yank({
-                higroup = "IncSearch",
-                timeout = 100
+        vim.keymap.set("n", "<C-d>", "<C-d>zz", {
+            desc = 'Move cursor to middle',
+            noremap = true
+        })
+        vim.keymap.set("n", "<C-u>", "<C-u>zz", {
+            desc = 'Move cursor to middle',
+            noremap = true
+        })
+
+        -- save the file
+        vim.keymap.set('n', '<leader>w', ':w<CR>', opts)
+
+        -- Code Actions (Quickfix)
+        if is_macos then
+            vim.keymap.set({'n', 'x'}, '<D>.', function()
+                vscode.action('editor.action.quickFix')
+            end, {
+                desc = '[VSCode] Open editor actions',
+                noremap = true
+            })
+        elseif is_windows then
+            vim.keymap.set({'n', 'x'}, '<A>.', function()
+                vscode.action('editor.action.quickFix')
+            end, {
+                desc = '[VSCode] Open editor actions',
+                noremap = true
             })
         end
-    })
 
-    -- code navigation
-    keymap({"n", "v"}, "gr", "<cmd>lua require('vscode').action('references-view.findReferences')<CR>")
-end
+        if vim.g.vscode then
+            -- Implement for vscode
+            -- vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = 'Move cursor to middle', noremap = true })
+            -- vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = 'Move cursor to middle', noremap = true })
+
+            -- Use VSCode's vertical split action
+            vim.keymap.set("n", "<leader>vv", function()
+                require('vscode').action('workbench.action.splitEditor')
+            end, {
+                noremap = true,
+                silent = true,
+                desc = '[VSCode] Vertical split'
+            })
+
+            vim.keymap.set("n", "<leader>vh", function()
+                require('vscode').action('workbench.action.splitEditorOrthogonal')
+            end, {
+                noremap = true,
+                silent = true,
+                desc = '[VSCode] Horizontal split'
+            })
+
+            vim.keymap.set("n", "<leader>h", "<cmd>lua require('vscode').action('workbench.action.navigateLeft')<CR>")
+            vim.keymap.set("n", "<leader>l", "<cmd>lua require('vscode').action('workbench.action.navigateRight')<CR>")
+
+            vim.keymap.set({"n", "v"}, "<leader>a", "<cmd>lua require('vscode').action('editor.action.quickFix')<CR>")
+            vim.keymap.set({"n", "v"}, "<leader>sp",
+                "<cmd>lua require('vscode').action('workbench.actions.view.problems')<CR>")
+            vim.keymap.set({"n", "v"}, "<leader>fd",
+                "<cmd>lua require('vscode').action('editor.action.formatDocument')<CR>")
+
+            -- Hightlight on yank
+            -- Highlight yanked text
+            vim.api.nvim_create_augroup("highlight_yank", {})
+            vim.api.nvim_create_autocmd("TextYankPost", {
+                group = "highlight_yank",
+                callback = function()
+                    vim.highlight.on_yank({
+                        higroup = "IncSearch",
+                        timeout = 100
+                    })
+                end
+            })
+
+            -- code navigation
+            vim.keymap.set({"n", "v"}, "gr", "<cmd>lua require('vscode').action('references-view.findReferences')<CR>")
+
+            vim.keymap.set({'n', 'v'}, '?', function()
+                local txt = ""
+                if vim.fn.mode() == 'v' then
+                    local selection = vscode.eval("return vscode.window.activeTextEditor.selection")
+                    if selection and not selection.isEmpty then
+                        txt = vscode.eval(
+                            "return vscode.window.activeTextEditor.document.getText(vscode.window.activeTextEditor.selection)")
+                    end
+                else
+                    txt = vim.fn.expand('<cword>')
+                end
+                require('vscode').action("workbench.action.findInFiles", {
+                    args = {
+                        query = vim.fn.expand(txt)
+                    }
+                })
+            end, {
+                noremap = true,
+                silent = true,
+                desc = 'Find in files for word or selection'
+            })
+
+            if is_macos then
+
+            elseif is_windows then
+            end
+
+
+
+
+        else
+            vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, opts) -- Example: open netrw in standalone Neovim
+            vim.keymap.set('n', 'n', 'nzzzv', opts)
+            vim.keymap.set('n', 'N', 'Nzzzv', opts)
+            vim.keymap.set("n", "<C-d>", "<C-d>zz", opts)
+            vim.keymap.set("n", "<C-u>", "<C-u>zz", {
+                desc = 'Move cursor to middle',
+                noremap = true
+            })
+        end
+
+    end
+}
+
+-- harpoon keymaps
+-- keymap({"n", "v"}, "<leader>ha", "<cmd>lua require('vscode').action('vscode-harpoon.addEditor')<CR>")
+-- keymap({"n", "v"}, "<leader>ho", "<cmd>lua require('vscode').action('vscode-harpoon.editorQuickPick')<CR>")
+-- keymap({"n", "v"}, "<leader>he", "<cmd>lua require('vscode').action('vscode-harpoon.editEditors')<CR>")
+-- keymap({"n", "v"}, "<leader>h1", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor1')<CR>")
+-- keymap({"n", "v"}, "<leader>h2", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor2')<CR>")
+-- keymap({"n", "v"}, "<leader>h3", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor3')<CR>")
+-- keymap({"n", "v"}, "<leader>h4", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor4')<CR>")
+-- keymap({"n", "v"}, "<leader>h5", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor5')<CR>")
+-- keymap({"n", "v"}, "<leader>h6", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor6')<CR>")
+-- keymap({"n", "v"}, "<leader>h7", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor7')<CR>")
+-- keymap({"n", "v"}, "<leader>h8", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor8')<CR>")
+-- keymap({"n", "v"}, "<leader>h9", "<cmd>lua require('vscode').action('vscode-harpoon.gotoEditor9')<CR>")
