@@ -15,14 +15,26 @@ keymap("n", "<leader>Y", [["+Y]], opts)
 -- Paste from system clipboard
 keymap("n", "<leader>p", [["+p]], opts)
 
+keymap('x', '<', '<gv', {
+    desc = 'Reselect visual block after reducing indenting',
+    noremap = true
+})
+keymap('x', '>', '>gv|', {
+    desc = 'Reselect visual block after increasing indenting',
+    noremap = true
+})
 
-
-keymap('x', '<', '<gv', { desc = 'Reselect visual block after reducing indenting', noremap = true })
-keymap('x', '>', '>gv|', { desc = 'Reselect visual block after increasing indenting', noremap = true })
-
- -- smart up and down
- vim.keymap.set('n', '<down>', 'gj', { desc = 'Move down in wrapped lines', silent = true, remap = true })
- vim.keymap.set('n', '<up>', 'gk', { desc = 'Move up in wrapped lines', silent = true, remap = true })
+-- smart up and down
+vim.keymap.set('n', '<down>', 'gj', {
+    desc = 'Move down in wrapped lines',
+    silent = true,
+    remap = true
+})
+vim.keymap.set('n', '<up>', 'gk', {
+    desc = 'Move up in wrapped lines',
+    silent = true,
+    remap = true
+})
 
 if vim.g.vscode then
     -- splits and naivagation
@@ -38,16 +50,21 @@ if vim.g.vscode then
     keymap({"n", "v"}, "<leader>cp", "<cmd>lua require('vscode').action('workbench.action.showCommands')<CR>")
     keymap({"n", "v"}, "<leader>fd", "<cmd>lua require('vscode').action('editor.action.formatDocument')<CR>")
 
-
+    -- Hightlight on yank
+    -- Highlight yanked text
+    vim.api.nvim_create_augroup("highlight_yank", {})
+    vim.api.nvim_create_autocmd("TextYankPost", {
+        group = "highlight_yank",
+        callback = function()
+            vim.highlight.on_yank({
+                higroup = "IncSearch",
+                timeout = 100
+            })
+        end
+    })
 
     -- code navigation
     keymap({"n", "v"}, "gr", "<cmd>lua require('vscode').action('references-view.findReferences')<CR>")
-
-
-
-
-
-
 
 else
     vim.o.number = true -- Show line numbers
