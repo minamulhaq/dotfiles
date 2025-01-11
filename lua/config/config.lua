@@ -10,6 +10,7 @@ vim.o.incsearch = true -- Enable incremental search
 vim.o.termguicolors = true -- Enable true colors
 vim.o.cmdheight = 1
 vim.opt.guifont = "MesloLGS NF:h11" -- h11 sets the font size to 11
+vim.opt.background = "dark"
 
 vim.keymap.set('n', 'x', '"_x', opts)
 
@@ -27,4 +28,8 @@ else
     vim.opt.smartindent = true
     vim.opt.swapfile = false
     vim.opt.backup = false
+
+    -- transparent background
+    -- Enable true colors
+    vim.opt.termguicolors = true
 end

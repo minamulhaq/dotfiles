@@ -1,6 +1,7 @@
 --  TODO: DIAGNOSTICS ARE MISSING
+local vscode = nil
 if vim.g.vscode then
-    local vscode = require('vscode')
+    vscode = require('vscode')
 end
 local opts = {
     noremap = true,
