@@ -11,7 +11,7 @@ return {
     -- Mason-LSPConfig for integrating Mason with nvim-lspconfig
     {
         "williamboman/mason-lspconfig.nvim",
-        cond = not vim.g.vscode, -- Only load if NOT in VSCode
+        cond = not vim.g.vscode,                -- Only load if NOT in VSCode
         dependencies = { "williamboman/mason.nvim" }, -- Ensure Mason is loaded
         config = function()
             require("mason-lspconfig").setup({
@@ -23,7 +23,7 @@ return {
     -- Native LSP configuration
     {
         "neovim/nvim-lspconfig",
-        cond = not vim.g.vscode, -- Only load if NOT in VSCode
+        cond = not vim.g.vscode,                          -- Only load if NOT in VSCode
         dependencies = { "williamboman/mason-lspconfig.nvim" }, -- Ensure Mason-LSPConfig is loaded
         config = function()
             -- Ensure cmp_nvim_lsp is installed for capabilities
@@ -71,6 +71,21 @@ return {
             lspconfig.gopls.setup({
                 on_attach = on_attach,
                 capabilities = capabilities,
+            })
+
+            -- Python LSP setup (pyright)
+            lspconfig.pyright.setup({
+                on_attach = on_attach,
+                capabilities = capabilities,
+                settings = {
+                    python = {
+                        pythonPath = "/Users/muhammadinamulhaq/.py_envs/3_12/bin/python3.12",
+                        analysis = {
+                            autoImportCompletions = true, -- Enable auto-import completions
+                            useLibraryCodeForTypes = true, -- Use library code for type information
+                        },
+                    },
+                },
             })
         end,
     },
