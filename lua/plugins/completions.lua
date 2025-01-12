@@ -20,6 +20,7 @@ return {
     {
         "hrsh7th/nvim-cmp",
         cond = not vim.g.vscode,
+        event = "InsertEnter",
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",  -- LSP source
             "hrsh7th/cmp-buffer",    -- Buffer source

@@ -5,7 +5,7 @@ if vim.g.vscode then
 end
 local opts = {
     noremap = true,
-    silent = true,
+    silent = true
 }
 
 local is_windows = vim.loop.os_uname().sysname == "Windows_NT"
@@ -19,89 +19,86 @@ return {
         vim.keymap.set("v", "<leader>y", '"+y', {
             noremap = true,
             silent = true,
-            desc = "Yank selection to clipboard",
+            desc = "Yank selection to clipboard"
         })
         vim.keymap.set("n", "<leader>Y", '"+yg_', {
             noremap = true,
             silent = true,
-            desc = "Yank line to clipboard excluding newline",
+            desc = "Yank line to clipboard excluding newline"
         })
         vim.keymap.set("n", "<leader>y", '"+y', {
             noremap = true,
             silent = true,
-            desc = "Yank to clipboard",
+            desc = "Yank to clipboard"
         })
 
         -- Paste from system clipboard
         vim.keymap.set("n", "<leader>p", '"+p', {
             noremap = true,
             silent = true,
-            desc = "Paste after cursor from clipboard",
+            desc = "Paste after cursor from clipboard"
         })
         vim.keymap.set("n", "<leader>P", '"+P', {
             noremap = true,
             silent = true,
-            desc = "Paste before cursor from clipboard",
+            desc = "Paste before cursor from clipboard"
         })
         vim.keymap.set("v", "<leader>p", '"+p', {
             noremap = true,
             silent = true,
-            desc = "Paste after selection from clipboard",
+            desc = "Paste after selection from clipboard"
         })
         vim.keymap.set("v", "<leader>P", '"+P', {
             noremap = true,
             silent = true,
-            desc = "Paste before selection from clipboard",
+            desc = "Paste before selection from clipboard"
         })
 
         vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", {
             desc = "Move selection down",
-            noremap = true,
+            noremap = true
         })
         vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", {
             desc = "Move selection up",
-            noremap = true,
+            noremap = true
         })
 
         -- Select blocks after indenting
         vim.keymap.set("x", "<", "<gv", {
             desc = "Reselect visual block after reducing indenting",
-            noremap = true,
+            noremap = true
         })
         vim.keymap.set("x", ">", ">gv|", {
             desc = "Reselect visual block after increasing indenting",
-            noremap = true,
+            noremap = true
         })
 
         vim.keymap.set("n", "<C-d>", "<C-d>zz", {
             desc = "Move cursor to middle",
-            noremap = true,
+            noremap = true
         })
         vim.keymap.set("n", "<C-u>", "<C-u>zz", {
             desc = "Move cursor to middle",
-            noremap = true,
+            noremap = true
         })
-
-        -- NeoTree toggle
-        vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", opts)
 
         -- save the file
         vim.keymap.set("n", "<leader>w", ":w<CR>", opts)
 
         -- Code Actions (Quickfix)
         if is_macos then
-            vim.keymap.set({ "n", "x" }, "<D>.", function()
+            vim.keymap.set({"n", "x"}, "<D>.", function()
                 vscode.action("editor.action.quickFix")
             end, {
                 desc = "[VSCode] Open editor actions",
-                noremap = true,
+                noremap = true
             })
         elseif is_windows then
-            vim.keymap.set({ "n", "x" }, "<A>.", function()
+            vim.keymap.set({"n", "x"}, "<A>.", function()
                 vscode.action("editor.action.quickFix")
             end, {
                 desc = "[VSCode] Open editor actions",
-                noremap = true,
+                noremap = true
             })
         end
 
@@ -116,7 +113,7 @@ return {
             end, {
                 noremap = true,
                 silent = true,
-                desc = "[VSCode] Vertical split",
+                desc = "[VSCode] Vertical split"
             })
 
             vim.keymap.set("n", "<leader>vh", function()
@@ -124,23 +121,17 @@ return {
             end, {
                 noremap = true,
                 silent = true,
-                desc = "[VSCode] Horizontal split",
+                desc = "[VSCode] Horizontal split"
             })
 
             vim.keymap.set("n", "<leader>h", "<cmd>lua require('vscode').action('workbench.action.navigateLeft')<CR>")
             vim.keymap.set("n", "<leader>l", "<cmd>lua require('vscode').action('workbench.action.navigateRight')<CR>")
 
-            vim.keymap.set({ "n", "v" }, "<leader>a", "<cmd>lua require('vscode').action('editor.action.quickFix')<CR>")
-            vim.keymap.set(
-                { "n", "v" },
-                "<leader>sp",
-                "<cmd>lua require('vscode').action('workbench.actions.view.problems')<CR>"
-            )
-            vim.keymap.set(
-                { "n", "v" },
-                "<leader>fd",
-                "<cmd>lua require('vscode').action('editor.action.formatDocument')<CR>"
-            )
+            vim.keymap.set({"n", "v"}, "<leader>a", "<cmd>lua require('vscode').action('editor.action.quickFix')<CR>")
+            vim.keymap.set({"n", "v"}, "<leader>sp",
+                "<cmd>lua require('vscode').action('workbench.actions.view.problems')<CR>")
+            vim.keymap.set({"n", "v"}, "<leader>fd",
+                "<cmd>lua require('vscode').action('editor.action.formatDocument')<CR>")
 
             -- Hightlight on yank
             -- Highlight yanked text
@@ -150,39 +141,36 @@ return {
                 callback = function()
                     vim.highlight.on_yank({
                         higroup = "IncSearch",
-                        timeout = 100,
+                        timeout = 100
                     })
-                end,
+                end
             })
 
-            -- code navigation
-            vim.keymap.set(
-                { "n", "v" },
-                "gr",
-                "<cmd>lua require('vscode').action('references-view.findReferences')<CR>"
-            )
+            -- Explorer
 
-            vim.keymap.set({ "n", "v" }, "?", function()
+            -- code navigation
+            vim.keymap.set({"n", "v"}, "gr", "<cmd>lua require('vscode').action('references-view.findReferences')<CR>")
+
+            vim.keymap.set({"n", "v"}, "?", function()
                 local txt = ""
                 if vim.fn.mode() == "v" then
                     local selection = vscode.eval("return vscode.window.activeTextEditor.selection")
                     if selection and not selection.isEmpty then
                         txt = vscode.eval(
-                            "return vscode.window.activeTextEditor.document.getText(vscode.window.activeTextEditor.selection)"
-                        )
+                            "return vscode.window.activeTextEditor.document.getText(vscode.window.activeTextEditor.selection)")
                     end
                 else
                     txt = vim.fn.expand("<cword>")
                 end
                 require("vscode").action("workbench.action.findInFiles", {
                     args = {
-                        query = vim.fn.expand(txt),
-                    },
+                        query = vim.fn.expand(txt)
+                    }
                 })
             end, {
                 noremap = true,
                 silent = true,
-                desc = "Find in files for word or selection",
+                desc = "Find in files for word or selection"
             })
 
             if is_macos then
@@ -195,8 +183,8 @@ return {
                 vscode.action("revealLine", {
                     args = {
                         at = "center",
-                        lineNumber = vim.api.nvim_win_get_cursor(0)[1],
-                    },
+                        lineNumber = vim.api.nvim_win_get_cursor(0)[1]
+                    }
                 })
             end
 
@@ -216,10 +204,13 @@ return {
             vim.keymap.set("n", "<C-d>", "<C-d>zz", opts)
             vim.keymap.set("n", "<C-u>", "<C-u>zz", {
                 desc = "Move cursor to middle",
-                noremap = true,
+                noremap = true
             })
+
+            -- NeoTree toggle
+            vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", opts)
         end
-    end,
+    end
 }
 
 -- harpoon keymaps
