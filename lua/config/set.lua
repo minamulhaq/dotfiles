@@ -136,9 +136,6 @@ return {
 				desc = "[VSCode] Horizontal split",
 			})
 
-			vim.keymap.set("n", "<leader>h", "<cmd>lua require('vscode').action('workbench.action.navigateLeft')<CR>")
-			vim.keymap.set("n", "<leader>l", "<cmd>lua require('vscode').action('workbench.action.navigateRight')<CR>")
-
 			vim.keymap.set({ "n", "v" }, "<leader>a", "<cmd>lua require('vscode').action('editor.action.quickFix')<CR>")
 			vim.keymap.set(
 				{ "n", "v" },
