@@ -40,7 +40,11 @@ return {
 		local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
-		local capabilities = cmp_nvim_lsp.default_capabilities()
+		local capabilities = vim.tbl_deep_extend(
+			"force",
+			vim.lsp.protocol.make_client_capabilities(),
+			cmp_nvim_lsp.default_capabilities()
+		)
 
 		-- Use LspAttach autocommand to only map the following keys
 		-- after the language server attaches to the current buffer
@@ -90,8 +94,11 @@ return {
 			},
 			automatic_installation = true,
 			handlers = {
+
 				function(server_name) -- default handler (optional)
-					require("lspconfig")[server_name].setup({})
+					require("lspconfig")[server_name].setup({
+						capabilities = capabilities,
+					})
 				end,
 
 				["rust_analyzer"] = function()
@@ -99,6 +106,7 @@ return {
 
 						settings = {
 							["rust-analyzer"] = {
+								capabilities = capabilities,
 								diagnostics = {
 									enable = true, -- Enable diagnostics
 								},
@@ -110,6 +118,7 @@ return {
 				["lua_ls"] = function()
 					-- local lspconfig = require("lspconfig")
 					lspconfig.lua_ls.setup({
+						capabilities = capabilitie,
 						settings = {
 							Lua = {
 								diagnostics = {
