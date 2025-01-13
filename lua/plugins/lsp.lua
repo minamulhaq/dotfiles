@@ -39,7 +39,6 @@ return {
 		local lspconfig = require("lspconfig")
 
 		local cmp = require("cmp")
-		local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
 		local cmp_nvim_lsp = require("cmp_nvim_lsp")
 		local capabilities = vim.tbl_deep_extend(
@@ -62,26 +61,24 @@ return {
 				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
 				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-				-- vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, opts)
-				-- vim.keymap.set('n', '<leader>vd', vim.diagnostics.open_float, opts)
-				-- vim.keymap.set('n', '<leader>vca', vim.lsp.buf.code_action, opts)
-				-- vim.keymap.set('n', '<leader>vrr', vim.lsp.buf.refrences, opts)
+				vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, opts)
+				vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, opts)
+				vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 				vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
 				vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
 				vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-				vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
-				vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
-				vim.keymap.set("n", "<space>wl", function()
+				vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
+				vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts)
+				vim.keymap.set("n", "<leader>wl", function()
 					print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 				end, opts)
-				vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, opts)
-				vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, opts)
-				vim.keymap.set({ "n", "v" }, "<space>ca", vim.lsp.buf.code_action, opts)
-				vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+				vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, opts)
+				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+				vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
 				vim.keymap.set("n", "<C-h>", function()
 					vim.lsp.buf.signature_help()
 				end, opts)
-				vim.keymap.set("n", "<space>f", function()
+				vim.keymap.set("n", "<leader>fd", function()
 					vim.lsp.buf.format({ async = true })
 				end, opts)
 			end,
@@ -116,6 +113,13 @@ return {
 								},
 							},
 						},
+					})
+				end,
+
+				["clangd"] = function()
+					lspconfig.clangd.setup({
+						settings = {},
+						capabilities = capabilities,
 					})
 				end,
 
@@ -302,9 +306,36 @@ return {
 		-- None-ls
 		local null_ls = require("null-ls")
 
+		local flake8 = {
+			method = null_ls.methods.DIAGNOSTICS,
+			filetypes = { "python" },
+			generator = null_ls.generator({
+				command = "flake8",
+				args = { "--stdin-display-name", "$FILENAME", "-", "--format", "default" },
+				to_stdin = true,
+				from_stderr = true,
+				format = "line",
+				on_output = function(line, params)
+					-- Parse flake8 output: filename:line:column: message
+					local row, col, message = line:match(":(%d+):(%d+):%s+(.+)")
+					if not row or not col or not message then
+						return nil
+					end
+					return {
+						row = tonumber(row),
+						col = tonumber(col),
+						message = message,
+						severity = vim.diagnostic.severity.WARN,
+					}
+				end,
+			}),
+		}
+
 		null_ls.setup({
 			sources = {
+				flake8,
 				null_ls.builtins.formatting.stylua,
+				null_ls.builtins.formatting.black,
 			},
 		})
 	end,

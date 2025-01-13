@@ -142,6 +142,7 @@ return {
 				"<leader>sp",
 				"<cmd>lua require('vscode').action('workbench.actions.view.problems')<CR>"
 			)
+
 			vim.keymap.set(
 				{ "n", "v" },
 				"<leader>fd",
