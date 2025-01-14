@@ -105,7 +105,6 @@ return {
 						capabilities = capabilities,
 						settings = {
 							python = {
-								pythonPath = "/Users/muhammadinamulhaq/.py_envs/3_12/bin/python3.12",
 								analysis = {
 									autoSearchPaths = true,
 									diagnosticMode = "openFilesOnly",
