@@ -10,10 +10,6 @@ return {
 		"hrsh7th/cmp-cmdline",
 		"hrsh7th/nvim-cmp",
 
-		-- " For vsnip users.
-		-- 'hrsh7th/cmp-vsnip',
-		-- 'hrsh7th/vim-vsnip',
-
 		-- " For luasnip users.
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip",
@@ -25,11 +21,20 @@ return {
 		"nvim-lua/plenary.nvim",
 		-- None-ls
 		"nvimtools/none-ls.nvim",
+		"nvimtools/none-ls-extras.nvim",
+		"jayp0521/mason-null-ls.nvim",
 	},
 
 	cond = not vim.g.vscode,
 	-- event = "InsertEnter",
 	config = function()
+		require("mason-null-ls").setup({
+			ensure_installed = {
+				"ruff",
+				"prettier",
+				"shfmt",
+			},
+		})
 		require("mason").setup({})
 		require("fidget").setup({})
 		local luasnip = require("luasnip")
@@ -61,8 +66,8 @@ return {
 				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 				vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
 				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-				vim.keymap.set('n', '<leader>vws', vim.lsp.buf.workspace_symbol, opts)
-				vim.keymap.set('n', '<leader>vd', vim.diagnostic.open_float, opts)
+				vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
+				vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
 				vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 				vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
 				vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
@@ -81,6 +86,19 @@ return {
 				vim.keymap.set("n", "<leader>fd", function()
 					vim.lsp.buf.format({ async = true })
 				end, opts)
+
+				local client = vim.lsp.get_client_by_id(ev.data.client_id)
+				if client and client.server_capabilities.documentHighlightProvider then
+					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+						buffer = ev.buf,
+						callback = vim.lsp.buf.document_highlight,
+					})
+
+					vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+						buffer = ev.buf,
+						callback = vim.lsp.buf.clear_references,
+					})
+				end
 			end,
 		})
 
@@ -106,11 +124,44 @@ return {
 						settings = {
 							python = {
 								analysis = {
-									autoSearchPaths = true,
-									diagnosticMode = "openFilesOnly",
-									useLibraryCodeForTypes = true,
+									ignore = { "*" }, -- ignore in favor of ruff
+									-- autoSearchPaths = true,
+									-- diagnosticMode = "openFilesOnly",
+									-- useLibraryCodeForTypes = true,
 								},
 							},
+						},
+					})
+				end,
+
+				["ruff"] = function()
+					require("lspconfig").ruff.setup({
+						capabilities = capabilities,
+						settings = {
+							-- commands = {
+							-- 	RuffAutofix = {
+							-- 		function()
+							-- 			vim.lsp.buf.execute_command({
+							-- 				command = "ruff.applyAutofix",
+							-- 				arguments = {
+							-- 					{ uri = vim.uri_from_bufnr(0) },
+							-- 				},
+							-- 			})
+							-- 		end,
+							-- 		description = "Ruff: Fix all auto-fixable problems",
+							-- 	},
+							-- 	RuffOrganizeImports = {
+							-- 		function()
+							-- 			vim.lsp.buf.execute_command({
+							-- 				command = "ruff.applyOrganizeImports",
+							-- 				arguments = {
+							-- 					{ uri = vim.uri_from_bufnr(0) },
+							-- 				},
+							-- 			})
+							-- 		end,
+							-- 		description = "Ruff: Format imports",
+							-- 	},
+							-- },
 						},
 					})
 				end,
@@ -119,6 +170,7 @@ return {
 					lspconfig.clangd.setup({
 						settings = {},
 						capabilities = capabilities,
+						cmd = {},
 					})
 				end,
 
@@ -147,6 +199,14 @@ return {
 								},
 							},
 						},
+					})
+				end,
+				["gopls"] = function()
+					-- local lspconfig = require("lspconfig")
+					lspconfig.gopls.setup({
+						capabilities = capabilities,
+						settings = {},
+						cmd = { "gopls" },
 					})
 				end,
 			},
@@ -305,229 +365,41 @@ return {
 		-- None-ls
 		local null_ls = require("null-ls")
 
-		local flake8 = {
-			method = null_ls.methods.DIAGNOSTICS,
-			filetypes = { "python" },
-			generator = null_ls.generator({
-				command = "flake8",
-				args = { "--stdin-display-name", "$FILENAME", "-", "--format", "default" },
-				to_stdin = true,
-				from_stderr = true,
-				format = "line",
-				on_output = function(line, params)
-					-- Parse flake8 output: filename:line:column: message
-					local row, col, message = line:match(":(%d+):(%d+):%s+(.+)")
-					if not row or not col or not message then
-						return nil
-					end
-					return {
-						row = tonumber(row),
-						col = tonumber(col),
-						message = message,
-						severity = vim.diagnostic.severity.WARN,
-					}
-				end,
-			}),
-		}
-
-		null_ls.setup({
-			sources = {
-				flake8,
-				null_ls.builtins.formatting.stylua,
-				null_ls.builtins.formatting.black,
+		require("mason-null-ls").setup({
+			ensure_installed = {
+				"prettier", -- ts/js formatter
+				"stylua", -- lua formatter
+				"eslint_d", -- ts/js linter
+				"shfmt",
+				"ruff",
 			},
+			automatic_installation = true,
+		})
+		local sources = {
+			null_ls.builtins.formatting.prettier.with({ filetypes = { "html", "json", "yaml", "markdown" } }),
+			null_ls.builtins.formatting.stylua,
+			null_ls.builtins.formatting.shfmt.with({ args = { "-i", "4" } }),
+			require("none-ls.formatting.ruff").with({ extra_args = { "--extend-select", "I" } }),
+			require("none-ls.formatting.ruff_format"),
+		}
+		local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+		null_ls.setup({
+			-- debug = true, -- Enable debug mode. Inspect logs with :NullLsLog.
+			sources = sources,
+			-- you can reuse a shared lspconfig on_attach callback here
+			-- formats doc on save
+			on_attach = function(client, bufnr)
+				if client.supports_method("textDocument/formatting") then
+					vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+					vim.api.nvim_create_autocmd("BufWritePre", {
+						group = augroup,
+						buffer = bufnr,
+						callback = function()
+							vim.lsp.buf.format({ async = false })
+						end,
+					})
+				end
+			end,
 		})
 	end,
 }
--- return {
--- 	-- Mason for managing LSP servers, DAP, linters, and formatters
--- 	{
--- 		"williamboman/mason.nvim",
--- 		cond = not vim.g.vscode, -- Only load if NOT in VSCode
--- 		config = function()
--- 			require("mason").setup()
--- 		end,
--- 	},
---
--- 	-- Mason-LSPConfig for integrating Mason with nvim-lspconfig
--- 	{
--- 		"williamboman/mason-lspconfig.nvim",
--- 		cond = not vim.g.vscode, -- Only load if NOT in VSCode
--- 		dependencies = { "williamboman/mason.nvim" }, -- Ensure Mason is loaded
--- 		config = function()
--- 			require("mason-lspconfig").setup({
--- 				ensure_installed = { "lua_ls", "rust_analyzer", "gopls", "pyright" },
---                 automatic_installation = true
--- 			})
--- 		end,
--- 	},
---
--- 	-- Native LSP configuration
--- 	{
--- 		"neovim/nvim-lspconfig",
---         event = {
---             "BufReadPre",
---             "BufNewFile"
---         },
--- 		cond = not vim.g.vscode, -- Only load if NOT in VSCode
--- 		dependencies = { "williamboman/mason-lspconfig.nvim" }, -- Ensure Mason-LSPConfig is loaded
--- 		config = function()
--- 			-- Ensure cmp_nvim_lsp is installed for capabilities
--- 			local status_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
--- 			if not status_cmp then
--- 				vim.notify("cmp_nvim_lsp not found. Install it for completion capabilities.", vim.log.levels.ERROR)
--- 				return
--- 			end
---
--- 			local capabilities = cmp_nvim_lsp.default_capabilities()
--- 			local lspconfig = require("lspconfig")
---
--- 			-- Shared `on_attach` function for all LSP servers
--- 			local on_attach = function(client, bufnr)
--- 				local opts = { noremap = true, silent = true, buffer = bufnr }
--- 				vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
--- 				vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
--- 				vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
--- 				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
--- 				vim.keymap.set("n", "<leader>f", function()
--- 					vim.lsp.buf.format({ async = true })
--- 				end, opts)
--- 			end
---
--- 			-- Lua LSP setup
--- 			lspconfig.lua_ls.setup({
--- 				on_attach = on_attach,
--- 				capabilities = capabilities,
--- 			})
---
--- 			-- Clangd LSP setup
--- 			lspconfig.clangd.setup({
--- 				cmd = { "clangd" },
--- 				on_attach = on_attach,
--- 				capabilities = capabilities,
--- 			})
---
--- 			-- Rust LSP setup
--- 			lspconfig.rust_analyzer.setup({
--- 				on_attach = on_attach,
--- 				capabilities = capabilities,
--- 			})
---
--- 			-- Go LSP setup
--- 			lspconfig.gopls.setup({
--- 				on_attach = on_attach,
--- 				capabilities = capabilities,
--- 			})
---
--- 			-- Python LSP setup (pyright)
--- 			lspconfig.pyright.setup({
--- 				on_attach = on_attach,
--- 				capabilities = capabilities,
--- 				settings = {
--- 					python = {
--- 						pythonPath = "/Users/muhammadinamulhaq/.py_envs/3_12/bin/python3.12",
--- 						analysis = {
--- 							autoSearchPaths = true,
--- 							diagnosticMode = "openFilesOnly",
--- 							autoImportCompletions = true, -- Enable auto-import completions
--- 							useLibraryCodeForTypes = true, -- Use library code for type information
--- 						},
--- 					},
--- 				},
--- 			})
--- 		end,
--- 	},
---
---
---     {
---         'hrsh7th/cmp-nvim-lsp',
---         cond = not vim.g.vscode,
---
---     },
---     {
---         "L3MON4D3/LuaSnip",
---         cond = not vim.g.vscode,
---         dependencies = {
---             "saadparwaiz1/cmp_luasnip",
---             "rafamadriz/friendly-snippets",
---         },
---         config = function()
---             -- Load VSCode-style snippets from friendly-snippets
---             require("luasnip.loaders.from_vscode").lazy_load()
---         end,
---     },
---
---     {
---         "hrsh7th/nvim-cmp",
---         cond = not vim.g.vscode,
---         event = "InsertEnter",
---         dependencies = {
---             "hrsh7th/cmp-nvim-lsp",  -- LSP source
---             "hrsh7th/cmp-buffer",    -- Buffer source
---             "hrsh7th/cmp-path",      -- Path source
---             "hrsh7th/cmp-cmdline",   -- Command-line source
---         },
---         config = function()
---             local cmp = require("cmp")
---             cmp.setup({
---                 snippet = {
---                     -- Use LuaSnip as the snippet engine
---                     expand = function(args)
---                         require("luasnip").lsp_expand(args.body)
---                     end,
---                 },
---                 window = {
---                     completion = cmp.config.window.bordered(),
---                     documentation = cmp.config.window.bordered(),
---                 },
---                 mapping = cmp.mapping.preset.insert({
---                     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
---                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
---                     ["<C-Space>"] = cmp.mapping.complete(),
---                     ["<C-e>"] = cmp.mapping.abort(),
---                     ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item.
---                 }),
---                 sources = cmp.config.sources({
---                     { name = "nvim_lsp" }, -- Enable LSP autocompletion
---                     { name = "luasnip" },  -- Snippet source
---                 }, {
---                     { name = "buffer" },  -- Buffer autocompletion
---                     { name = "path" },    -- File path autocompletion
---                 }),
---             })
---         end,
---     },
---
---
---
--- }
---
-
--- return {
---     {
---         "jose-elias-alvarez/null-ls.nvim",
---         cond = not vim.g.vscode,
---         config = function()
---             local null_ls = require("null-ls")
---
---             -- Configure null-ls with cpplint and clang-format
---             null_ls.setup({
---                 sources = {
---
---                     null_ls.builtins.diagnostics.eslint_d,
---                     null_ls.builtins.formatting.stylua,
---                     null_ls.builtins.formatting.black,
---                     -- null_ls.builtins.formatting.isort,
---                     null_ls.builtins.formatting.prettier,
---                 },
---
---             })
---
---             -- Optional keybindings for linting and formatting
---             vim.api.nvim_set_keymap("n", "<leader>gf", ":lua vim.lsp.buf.format({ async = true })<CR>",
---                 { noremap = true, silent = true })
---             vim.api.nvim_set_keymap("n", "<leader>d", ":lua vim.diagnostic.open_float()<CR>",
---                 { noremap = true, silent = true })
---         end
---     }
--- }

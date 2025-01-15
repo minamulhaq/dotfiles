@@ -13,4 +13,28 @@ return {
 			require("mini.pairs").setup()
 		end,
 	},
+	{
+		"echasnovski/mini.bracketed",
+		version = "*", -- Use '*' for the latest stable release
+		config = function()
+			require("mini.bracketed").setup()
+		end,
+	},
+
+	{
+		"echasnovski/mini.completion",
+		version = "*", -- Use '*' for the latest stable release
+		config = function()
+			require("mini.completion").setup()
+		end,
+	},
+
+	{
+		"echasnovski/mini.comment",
+		version = "*", -- Use '*' for the latest stable release
+		config = function()
+			require("mini.comment").setup()
+		end,
+	},
+
 }
