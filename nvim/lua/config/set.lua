@@ -251,6 +251,12 @@ return {
 			-- vim.keymap.set("n", "<leader><leader>", function()
 			--     vim.cmd("so")
 			-- end)
+
+			-- Increase window width with Ctrl-Right
+			vim.api.nvim_set_keymap("n", "<C-Right>", ":vertical resize +5<CR>", { noremap = true, silent = true })
+
+			-- Decrease window width with Ctrl-Left
+			vim.api.nvim_set_keymap("n", "<C-Left>", ":vertical resize -5<CR>", { noremap = true, silent = true })
 		end
 	end,
 }
