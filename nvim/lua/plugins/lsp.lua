@@ -105,9 +105,7 @@ return {
 		mason_lsp_config.setup({
 			ensure_installed = {
 				"lua_ls",
-				"rust_analyzer",
 				"pyright",
-				"gopls",
 			},
 			automatic_installation = true,
 			handlers = {
@@ -176,7 +174,7 @@ return {
 
 				["rust_analyzer"] = function()
 					lspconfig.rust_analyzer.setup({
-
+						cmd = { "rust-analyzer" },
 						settings = {
 							["rust-analyzer"] = {
 								capabilities = capabilities,
