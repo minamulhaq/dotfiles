@@ -159,10 +159,15 @@ alias la="ls -la"
 alias vim="nvim"
 alias tls="tmux ls"
 
+alias air=~/go/bin/air
 
 
 
 
+
+
+export DOCKER_HOST=unix:///Users/muhammadinamulhaq/.docker/run/docker.sock
+export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
 
 
 
@@ -174,7 +179,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Open in tmux popup if on tmux, otherwise use --height mode
 export FZF_DEFAULT_OPTS="
-    --height 75% 
+    --height 50% 
     --info inline 
     --border 
     --preview 'file {}' 
@@ -202,16 +207,3 @@ export FZF_CTRL_R_OPTS="
 export FZF_ALT_C_COMMAND='find "${HOME:-~}" -type d'
 
 # Bind Ctrl+Shift+C to fzf directory selection
-
-
-  # Print tree structure in the preview window
-#export FZF_ALT_C_OPTS="
- # --walker-skip .git,node_modules,target
-#--preview 'tree -C {}'"
-
-
-alias air=~/go/bin/air
-
-export DOCKER_HOST=unix:///Users/muhammadinamulhaq/.docker/run/docker.sock
-
-export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
