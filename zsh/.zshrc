@@ -159,15 +159,17 @@ alias la="ls -la"
 alias vim="nvim"
 alias tls="tmux ls"
 
+alias gl="git log --graph --oneline --decorate"
+
 alias air=~/go/bin/air
 
 
 
 
+export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
 
 
 export DOCKER_HOST=unix:///Users/muhammadinamulhaq/.docker/run/docker.sock
-export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
 
 
 
@@ -207,3 +209,5 @@ export FZF_CTRL_R_OPTS="
 export FZF_ALT_C_COMMAND='find "${HOME:-~}" -type d'
 
 # Bind Ctrl+Shift+C to fzf directory selection
+
+export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
