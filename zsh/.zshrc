@@ -128,24 +128,24 @@ export PATH=/opt/ST/STM32CubeCLT_1.17.0/STM32CubeProgrammer/bin:$PATH
 
 
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
-    fi
-fi
-unset __conda_setup
+# # >>> conda initialize >>>
+# # !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+#         . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
 # <<< conda initialize <<<
 
 
-eval "$(conda "shell.$(basename "${SHELL}")" hook)"
-conda activate 3_12
+# eval "$(conda "shell.$(basename "${SHELL}")" hook)"
+# conda activate 3_12
 
 
 export ANDROID_HOME=/Users/$USER/Library/Android/sdk
@@ -173,6 +173,8 @@ export DOCKER_HOST=unix:///Users/muhammadinamulhaq/.docker/run/docker.sock
 
 
 
+# Python Env 
+source ~/.venv/3_13/bin/activate
 
 # fzf
 export FZF_DEFAULT_COMMAND='rg --files --hidden --glob '"'"'!.git/'"'"
@@ -187,9 +189,10 @@ export FZF_DEFAULT_OPTS="
     --preview 'file {}' 
     --preview-window right:50%,border-horizontal
     --bind 'ctrl-/:change-preview-window(50%|hidden|)' 
-    --color fg:#ebdbb2,bg:#282828,hl:#d79921,fg+:#fbf1c7,bg+:#3c3836,hl+:#fabd2f,info:#83a598,prompt:#d3869b,pointer:#fe8019,marker:#d3869b,spinner:#8ec07c,border:#504945
-
+    --color fg:#ebdbb2,hl:#d79921,fg+:#fbf1c7,hl+:#fabd2f,info:#83a598,prompt:#d3869b,pointer:#fe8019,marker:#d3869b,spinner:#8ec07c,border:#504945
 "
+# Colored background for fzf, above in transparent
+# --color fg:#ebdbb2,bg:#282828,hl:#d79921,fg+:#fbf1c7,bg+:#3c3836,hl+:#fabd2f,info:#83a598,prompt:#d3869b,pointer:#fe8019,marker:#d3869b,spinner:#8ec07c,border:#504945
 
 # Preview file content using bat (https://github.com/sharkdp/bat)
 export FZF_CTRL_T_OPTS="
@@ -207,7 +210,19 @@ export FZF_CTRL_R_OPTS="
 
 # export FZF_ALT_C_COMMAND="cd ~ && find . -type d"
 export FZF_ALT_C_COMMAND='find "${HOME:-~}" -type d'
+# Enhance Alt+C behavior with preview of directory contents
+export FZF_ALT_C_OPTS="
+    --preview 'ls -la --color=always {}'
+    --preview-window=right:60%
+"
+
 
 # Bind Ctrl+Shift+C to fzf directory selection
+
+
+
+
+
+[[ -n "$ZSH_POST_INIT" ]] && eval "$ZSH_POST_INIT"
 
 export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
