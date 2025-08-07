@@ -30,7 +30,6 @@ return {
 	config = function()
 		require("mason-null-ls").setup({
 			ensure_installed = {
-				"ruff",
 				"prettier",
 				"shfmt",
 			},
@@ -129,13 +128,6 @@ return {
 								},
 							},
 						},
-					})
-				end,
-
-				["ruff"] = function()
-					require("lspconfig").ruff.setup({
-						capabilities = capabilities,
-						settings = {},
 					})
 				end,
 
@@ -348,7 +340,6 @@ return {
 				"stylua", -- lua formatter
 				"eslint_d", -- ts/js linter
 				"shfmt",
-				"ruff",
 			},
 			automatic_installation = true,
 		})
