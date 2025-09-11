@@ -95,7 +95,7 @@ return {
 		})
 
 		-- save the file
-		vim.keymap.set("n", "<leader>w", ":w<CR>", opts)
+		vim.keymap.set("n", "<leader>wa", ":w<CR>", opts)
 
 		-- Code Actions (Quickfix)
 		if is_macos then
