@@ -30,7 +30,7 @@ return {
 	config = function()
 		require("mason-null-ls").setup({
 			ensure_installed = {
-				"ruff",
+				-- "ruff",
 				"prettier",
 				"shfmt",
 			},
@@ -348,7 +348,7 @@ return {
 				"stylua", -- lua formatter
 				"eslint_d", -- ts/js linter
 				"shfmt",
-				"ruff",
+				-- "ruff",
 			},
 			automatic_installation = true,
 		})
@@ -366,7 +366,7 @@ return {
 			-- you can reuse a shared lspconfig on_attach callback here
 			-- formats doc on save
 			on_attach = function(client, bufnr)
-				if client.supports_method("textDocument/formatting") then
+				if client:supports_method("textDocument/formatting") then
 					vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
 					vim.api.nvim_create_autocmd("BufWritePre", {
 						group = augroup,
