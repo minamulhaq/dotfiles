@@ -33,8 +33,13 @@ return {
 		"echasnovski/mini.comment",
 		version = "*", -- Use '*' for the latest stable release
 		config = function()
-			require("mini.comment").setup()
+			require("mini.comment").setup({
+				mappings = {
+					comment = "gc",
+					comment_line = "gcc",
+					textobject = "gc",
+				},
+			})
 		end,
 	},
-
 }

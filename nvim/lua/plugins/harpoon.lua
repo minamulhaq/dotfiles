@@ -11,8 +11,6 @@ return {
 		-- REQUIRED
 		harpoon:setup()
 		-- REQUIRED
-		--
-		--
 
 		vim.keymap.set("n", "<leader>he", function()
 			harpoon.ui:toggle_quick_menu(harpoon:list())
