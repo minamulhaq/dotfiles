@@ -95,7 +95,7 @@ return {
 		})
 
 		-- save the file
-		vim.keymap.set("n", "<leader>wa", ":w<CR>", opts)
+		vim.keymap.set("n", "<leader>w", ":wa<CR>", opts)
 
 		-- Code Actions (Quickfix)
 		if is_macos then
@@ -116,8 +116,10 @@ return {
 
 		if vim.g.vscode then
 			-- Implement for vscode
-			-- vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = 'Move cursor to middle', noremap = true })
-			-- vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = 'Move cursor to middle', noremap = true })
+			vscode = require("vscode")
+			vim.keymap.set("n", "<leader>w", function()
+				vscode.action("workbench.action.files.save")
+			end, opts)
 
 			-- Focus explorer
 			vim.keymap.set("n", "<leader>e", function()
@@ -133,9 +135,9 @@ return {
 				vscode.action("workbench.action.splitEditorOrthogonal")
 			end, opts)
 
-			vim.keymap.set({ "n", "v" }, "<leader>a", function()
-				vscode.action("editor.action.quickFix")
-			end, opts)
+			-- vim.keymap.set({ "n", "v" }, "<leader>a", function()
+			-- 	vscode.action("editor.action.quickFix")
+			-- end, opts)
 
 			vim.keymap.set({ "n", "v" }, "<leader>sp", function()
 				vscode.action("workbench.actions.view.problems")

@@ -112,41 +112,10 @@ source <(fzf --zsh)
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-
-
-
 # arm-none-eabi-gcc
 export PATH="/opt/ST/STM32CubeCLT_1.17.0/GNU-tools-for-STM32/bin:$PATH"
 export PATH=/opt/ST/STM32CubeCLT_1.17.0/Ninja/bin:$PATH
 export PATH=/opt/ST/STM32CubeCLT_1.17.0/STM32CubeProgrammer/bin:$PATH
-
-
-
-
-
-
-
-
-
-# # >>> conda initialize >>>
-# # !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-#         . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-#     else
-#         export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
-#     fi
-# fi
-# unset __conda_setup
-# <<< conda initialize <<<
-
-
-# eval "$(conda "shell.$(basename "${SHELL}")" hook)"
-# conda activate 3_12
-
 
 export ANDROID_HOME=/Users/$USER/Library/Android/sdk
 export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
@@ -157,6 +126,7 @@ alias s="source ~/.zshrc"
 alias z="vim ~/.zshrc"
 alias la="ls -la"
 alias vim="nvim"
+alias vi="nvim"
 alias tls="tmux ls"
 
 alias gl="git log --graph --oneline --decorate"
@@ -164,14 +134,9 @@ alias gl="git log --graph --oneline --decorate"
 alias air=~/go/bin/air
 
 
-
-
 export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
 
-
 export DOCKER_HOST=unix:///Users/muhammadinamulhaq/.docker/run/docker.sock
-
-
 
 # Python Env 
 source ~/.venv/3_13/bin/activate
@@ -219,10 +184,6 @@ export FZF_ALT_C_OPTS="
 
 # Bind Ctrl+Shift+C to fzf directory selection
 
-
-
-
-
-[[ -n "$ZSH_POST_INIT" ]] && eval "$ZSH_POST_INIT"
+# [[ -n "$ZSH_POST_INIT" ]] && eval "$ZSH_POST_INIT"
 
 export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
