@@ -1,3 +1,4 @@
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -16,7 +17,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
     spec = { -- import your plugins
     {
-        import = "plugins"
+        import = "Muhammad.plugins"
     }},
     checker = {
         enabled = true
@@ -27,3 +28,6 @@ require("lazy").setup({
         notify = true -- get a notification when changes are found
     }
 })
+
+
+ 
