@@ -1,5 +1,6 @@
 return {
     "ThePrimeagen/harpoon",
+    cond = not vim.g.vscode,
     branch = "harpoon2",
     enabled = true,
     dependencies = {

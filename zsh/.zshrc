@@ -127,6 +127,7 @@ alias z="vim ~/.zshrc"
 alias la="ls -la"
 alias vim="nvim"
 alias vi="nvim"
+alias v="nvim ."
 alias tls="tmux ls"
 
 alias gl="git log --graph --oneline --decorate"

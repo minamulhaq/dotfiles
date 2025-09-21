@@ -1,18 +1,9 @@
-local vscode = nil
-if vim.g.vscode then
-    vscode = require("vscode")
-else
-    vscode = nil
-end
 local opts = {
     noremap = true,
     silent = true,
 }
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-
-local is_windows = vim.loop.os_uname().sysname == "Windows_NT"
-local is_macos = vim.loop.os_uname().sysname == "Darwin"
 
 -- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -27,61 +18,18 @@ vim.keymap.set("i", "jj", "<Esc>")
 -- greatest remap ever
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
+
 -- Yank to system clipboard
-vim.keymap.set("v", "<leader>y", '"+y', {
-    noremap = true,
-    silent = true,
-    desc = "Yank selection to clipboard",
-})
-vim.keymap.set("n", "<leader>Y", '"+yg_', {
-    noremap = true,
-    silent = true,
-    desc = "Yank line to clipboard excluding newline",
-})
+vim.keymap.set("v", "<leader>y", '"+y', opts)  -- yank selection
+vim.keymap.set("n", "<leader>y", '"+yy', opts) -- yank current line
 
 -- Paste from system clipboard
-vim.keymap.set("n", "<leader>p", '"+p', {
-    noremap = true,
-    silent = true,
-    desc = "Paste after cursor from clipboard",
-})
-vim.keymap.set("n", "<leader>P", '"+P', {
-    noremap = true,
-    silent = true,
-    desc = "Paste before cursor from clipboard",
-})
-vim.keymap.set("v", "<leader>p", '"+p', {
-    noremap = true,
-    silent = true,
-    desc = "Paste after selection from clipboard",
-})
-vim.keymap.set("v", "<leader>P", '"+P', {
-    noremap = true,
-    silent = true,
-    desc = "Paste before selection from clipboard",
-})
--- save the file
-vim.keymap.set("n", "<leader>w", ":wa<CR>")
-vim.keymap.set("n", "<leader><leader>", function()
-    vim.cmd("so %")
-end)
+vim.keymap.set("n", "<leader>p", '"+p', opts) -- paste after cursor
+vim.keymap.set("n", "<leader>P", '"+P', opts) -- paste before cursor
+vim.keymap.set("v", "<leader>p", '"+p', opts) -- replace selection
+vim.keymap.set("v", "<leader>P", '"+P', opts) -- replace before    -- save the file
 
--- Example: open netrw in standalone Neovim
-vim.keymap.set("n", "<leader>e", vim.cmd.Ex, opts)
-vim.keymap.set("n", "n", "nzzzv", opts)
-vim.keymap.set("n", "N", "Nzzzv", opts)
-vim.keymap.set("n", "<C-d>", "<C-d>zz", {
-    desc = "Move down and set cursor to centered",
-    noremap = true,
-})
-vim.keymap.set("n", "<C-u>", "<C-u>zz", {
-    desc = "Move up and set cursor to centered",
-    noremap = true,
-})
 
--- move selection up and down
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", opts)
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", opts)
 
 -- Select blocks after indenting
 vim.keymap.set("x", "<", "<gv", {
@@ -99,13 +47,124 @@ vim.keymap.set("v", "p", '"_dP', opts)
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 vim.keymap.set("n", "x", '"_x')
 
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
-
-vim.keymap.set("n", "Q", "<nop>")
-vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
-
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+
+if Platform.is_not_vscode then
+    vim.keymap.set("n", "<leader><leader>", function()
+        vim.cmd("so")
+    end)
+    vim.keymap.set("n", "<leader>w", ":wa<CR>")
+    vim.keymap.set("n", "n", "nzzzv", opts)
+    vim.keymap.set("n", "N", "Nzzzv", opts)
+    vim.keymap.set("n", "<C-d>", "<C-d>zz", {
+        desc = "Move down and set cursor to centered",
+        noremap = true,
+    })
+    vim.keymap.set("n", "<C-u>", "<C-u>zz", {
+        desc = "Move up and set cursor to centered",
+        noremap = true,
+    })
+
+    -- move selection up and down
+    vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", opts)
+    vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", opts)
+
+    -- TODO: Apply for vscode
+    -- ------------------------------------------------------
+
+    -- ------------------------------------------------------
+
+    -- Example: open netrw in standalone Neovim
+    vim.keymap.set("n", "<leader>e", vim.cmd.Ex, opts)
+
+    vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
+    vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+    vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
+    vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+
+    vim.keymap.set("n", "Q", "<nop>")
+    vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+
+    vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+else
+    local vscode = Platform.vscode_api.api
+    assert(vscode ~= nil, "Vscode detected but api is nil")
+    vscode.notify("Setting up vscode LSP")
+
+    vim.keymap.set("n", "zz", function()
+        Platform.vscode_api.MoveCurrentLineToCenter()
+    end, opts)
+
+    vim.keymap.set("n", "<leader>w", function()
+        vscode.action("workbench.action.files.save")
+    end, opts)
+
+    vim.keymap.set("n", "*", function()
+        vim.cmd(":silent! :norm! *")
+        Platform.vscode_api.MoveCurrentLineToCenter()
+    end, { noremap = true, silent = true })
+
+    vim.keymap.set("n", "n", function()
+        vim.cmd(":silent! :norm! n")
+        Platform.vscode_api.MoveCurrentLineToCenter()
+    end, { noremap = true, silent = true })
+
+    vim.keymap.set("n", "N", function()
+        vim.cmd(":silent! :norm! N")
+        Platform.vscode_api.MoveCurrentLineToCenter()
+    end, { noremap = true, silent = true })
+
+
+    vim.keymap.set("n", "<C-d>", function()
+        vscode.eval([[
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            await vscode.commands.executeCommand('cursorPageDown');
+            await vscode.commands.executeCommand('revealLine', {
+                lineNumber: editor.selection.active.line,
+                at: 'center'
+            });
+        }
+    ]])
+    end, opts)
+
+    vim.keymap.set("n", "<C-u>", function()
+        vscode.eval([[
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            await vscode.commands.executeCommand('cursorPageUp');
+            await vscode.commands.executeCommand('revealLine', {
+                lineNumber: editor.selection.active.line,
+                at: 'center'
+            });
+        }
+    ]])
+    end, {
+        desc = "Move up and set cursor to centered",
+        noremap = true,
+        silent = true
+    })
+
+
+    vim.keymap.set("v", "J", function()
+        vscode.action("editor.action.moveLinesDownAction")
+    end, opts)
+
+    vim.keymap.set("v", "K", function()
+        vscode.action("editor.action.moveLinesUpAction")
+    end, opts)
+
+    -- Focus explorer
+    vim.keymap.set("n", "<leader>e", function()
+        vscode.action("workbench.view.explorer")
+    end, opts)
+
+    vim.keymap.set({ "n", "v" }, "<leader>td", function()
+        vscode.action("workbench.actions.view.problems")
+    end, opts)
+
+    -- Format document
+    vim.keymap.set({ "n", "v" }, "<leader>fd", function()
+        vscode.action("editor.action.formatDocument")
+    end)
+end

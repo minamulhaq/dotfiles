@@ -1,4 +1,3 @@
--- vim.opt.guicursor = ""
 vim.cmd("let g:netrw_banner = 0")
 
 
@@ -41,5 +40,4 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "80"
-vim.opt.clipboard:append("unnamedplus")
 vim.g.editorconfig = true
