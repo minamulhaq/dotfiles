@@ -1,6 +1,8 @@
 return {
     {
         "echasnovski/mini.pairs",
+        cond = Platform.is_not_vscode,
+        event = "VeryLazy",
         version = "*", -- Use '*' for the latest stable release
         config = function()
             require("mini.pairs").setup()
@@ -9,6 +11,8 @@ return {
     {
         "echasnovski/mini.bracketed",
         version = "*", -- Use '*' for the latest stable release
+        cond = Platform.is_not_vscode,
+        event = "VeryLazy",
         config = function()
             require("mini.bracketed").setup()
         end,
@@ -17,6 +21,8 @@ return {
     {
         "echasnovski/mini.completion",
         version = "*", -- Use '*' for the latest stable release
+        cond = Platform.is_not_vscode,
+        event = "VeryLazy",
         config = function()
             require("mini.completion").setup()
         end,
@@ -25,6 +31,8 @@ return {
     {
         "echasnovski/mini.comment",
         version = "*", -- Use '*' for the latest stable release
+        cond = Platform.is_not_vscode,
+        event = "VeryLazy",
         config = function()
             require("mini.comment").setup({
                 mappings = {
@@ -39,7 +47,8 @@ return {
     -- Surround
     {
         "echasnovski/mini.surround",
-        event = { "BufReadPre", "BufNewFile" },
+        -- cond = Platform.is_not_vscode,
+        event = "VeryLazy",
         opts = {
             -- Add custom surroundings to be used on top of builtin ones. For more
             -- information with examples, see `:h MiniSurround.config`.
@@ -53,16 +62,16 @@ return {
             -- saiw surround with no whitespace
             -- saw surround with whitespace
             mappings = {
-                add = "sa", -- Add surrounding in Normal and Visual modes
-                delete = "ds", -- Delete surrounding
-                find = "sf", -- Find surrounding (to the right)
-                find_left = "sF", -- Find surrounding (to the left)
-                highlight = "sh", -- Highlight surrounding
-                replace = "sr", -- Replace surrounding
+                add = "sa",            -- Add surrounding in Normal and Visual modes
+                delete = "ds",         -- Delete surrounding
+                find = "sf",           -- Find surrounding (to the right)
+                find_left = "sF",      -- Find surrounding (to the left)
+                highlight = "msh",     -- Highlight surrounding
+                replace = "sr",        -- Replace surrounding
                 update_n_lines = "sn", -- Update `n_lines`
 
-                suffix_last = "l", -- Suffix to search with "prev" method
-                suffix_next = "n", -- Suffix to search with "next" method
+                suffix_last = "l",     -- Suffix to search with "prev" method
+                suffix_next = "n",     -- Suffix to search with "next" method
             },
 
             -- Number of lines within which surrounding is searched

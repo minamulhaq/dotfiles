@@ -167,4 +167,20 @@ else
     vim.keymap.set({ "n", "v" }, "<leader>fd", function()
         vscode.action("editor.action.formatDocument")
     end)
+
+    -- [[
+    -- Add vscode key passthrough for ALT/OPTIONS
+    -- ]]
+    vim.keymap.set({ "n", "x", "i" }, "<M-d>", function()
+        vscode.with_insert(function()
+            vscode.action("editor.action.addSelectionToNextFindMatch")
+        end)
+    end)
+
+
+    vim.keymap.set({ "n", "x" }, "<leader>r", function()
+        vscode.with_insert(function()
+            vscode.action("editor.action.refactor")
+        end)
+    end)
 end

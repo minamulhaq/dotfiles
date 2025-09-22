@@ -13,6 +13,9 @@ return {
                 highlight = {
                     enable = true,
                 },
+                sync_install = true,
+                auto_install = true,
+
                 -- enable indentation
                 indent = { enable = true },
 
@@ -28,22 +31,16 @@ return {
                     "css",
                     "python",
                     "http",
-                    "prisma",
                     "markdown",
                     "markdown_inline",
-                    "svelte",
-                    "graphql",
                     "bash",
                     "lua",
                     "vim",
                     "dockerfile",
                     "gitignore",
-                    "query",
-                    "vimdoc",
                     "c",
                     "java",
                     "rust",
-                    "ron",
                 },
                 incremental_selection = {
                     enable = true,
@@ -51,6 +48,7 @@ return {
                         init_selection = "<C-space>",
                         node_incremental = "<C-space>",
                         scope_incremental = false,
+                        node_decremental = "<C-Backspace>"
                     },
                 },
                 additional_vim_regex_highlighting = false,
