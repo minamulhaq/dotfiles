@@ -1,10 +1,22 @@
-local function neovim_lsp_remap_callback(ev)
+-- lsp
+--------------------------------------------------------------------------------
+-- See https://gpanders.com/blog/whats-new-in-neovim-0-11/ for a nice overview
+-- of how the lsp setup works in neovim 0.11+.
+
+-- This actually just enables the lsp servers.
+-- The configuration is found in the lsp folder inside the nvim config folder,
+-- so in ~.config/lsp/lua_ls.lua for lua_ls, for example.
+--
+--
+
+
+local function neovim_lsp_remap_callback(args)
     -- Enable completion triggered by <c-x><c-o>
-    vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+    vim.bo[args.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
     --
     -- -- Buffer local mappings.
     -- -- See `:help vim.lsp.*` for documentation on any of the below functions
-    local opts = { buffer = ev.buf }
+    local opts = { buffer = args.buf }
     opts.desc = "List workspace folder"
     vim.keymap.set("n", "<leader>wl", function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
@@ -64,7 +76,7 @@ local function neovim_lsp_remap_callback(ev)
     end, opts)
 end
 
-local function vscode_lsp_remap_callback(ev)
+local function vscode_lsp_remap_callback()
     -- Code Actions / Quick Fix
     -- These GLOBAL keymaps are created unconditionally when Nvim starts:
     -- - "grn" is mapped in Normal mode to |vim.lsp.buf.rename()|
@@ -136,126 +148,74 @@ local function vscode_lsp_remap_callback(ev)
     })
 end
 
-return {
-    "neovim/nvim-lspconfig",
-    cond = Platform.is_not_vscode,
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-        "folke/lazydev.nvim",
-        "hrsh7th/cmp-nvim-lsp",
-        -- { "antosha417/nvim-lsp-file-operations", config = true },
-    },
-    config = function()
-        if Platform.is_vscode then
-            vscode_lsp_remap_callback()
-        else
-            vim.api.nvim_create_autocmd("LspAttach", {
-                group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-                callback = neovim_lsp_remap_callback
-            })
-        end
 
-        -- Define sign icons for each severity
-        local signs = {
-            [vim.diagnostic.severity.ERROR] = " ",
-            [vim.diagnostic.severity.WARN] = " ",
-            [vim.diagnostic.severity.HINT] = "󰠠 ",
-            [vim.diagnostic.severity.INFO] = " ",
-        }
-
-        -- Diagnostics
-        vim.diagnostic.config({
-            signs = {
-                text = signs
-            },
-            virtual_text = true,
-            update_in_insert = true,
-            float = {
-                focusable = false,
-                style = "minimal",
-                border = "rounded",
-                -- source = "always",
-                source = true,
-                header = "",
-                prefix = "",
-            },
-        })
+local function enable_lsps()
+    vim.lsp.enable('lua_ls')
+    vim.lsp.enable('clangd')
+end
 
 
 
+if Platform.is_not_vscode then
+    local cmp_nvim_lsp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+    if cmp_nvim_lsp_ok then
+        -- Merge default capabilities with cmp
+        vim.lsp.protocol.make_client_capabilities = (function(orig)
+            return function()
+                return vim.tbl_deep_extend(
+                    "force",
+                    orig(),
+                    cmp_nvim_lsp.default_capabilities()
+                )
+            end
+        end)(vim.lsp.protocol.make_client_capabilities)
+    end
 
+    enable_lsps()
+    vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('my.lsp', {}),
+        callback = function(args)
+            local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
+            neovim_lsp_remap_callback(args)
+            if client:supports_method('textDocument/completion') then
+                -- Optional: trigger autocompletion on EVERY keypress. May be slow!
+                -- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+                -- client.server_capabilities.completionProvider.triggerCharacters = chars
+                vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+            end
+        end,
+    })
 
+    -- Define sign icons for each severity
+    local signs = {
+        [vim.diagnostic.severity.ERROR] = " ",
+        [vim.diagnostic.severity.WARN] = " ",
+        [vim.diagnostic.severity.HINT] = "󰠠 ",
+        [vim.diagnostic.severity.INFO] = " ",
+    }
 
+    -- Diagnostics
+    vim.diagnostic.config({
+        signs = {
+            text = signs
+        },
+        -- virtual_text = true,
+        update_in_insert = true,
+        float = {
+            focusable = false,
+            style = "minimal",
+            border = "rounded",
+            -- source = "always",
+            source = true,
+            header = "",
+            prefix = "",
+        },
+        virtual_lines = {
+            -- Only show virtual line diagnostics for the current cursor line
+            current_line = true,
+        },
 
-
-
-
-
-
-        -- Setup servers
-        local cmp_nvim_lsp = require("cmp_nvim_lsp")
-        local capabilities = vim.tbl_deep_extend(
-            "force",
-            vim.lsp.protocol.make_client_capabilities(),
-            cmp_nvim_lsp.default_capabilities()
-        )
-
-        -- Global LSP settings (applied to all servers)
-        vim.lsp.config('*', {
-            capabilities = capabilities,
-        })
-
-        -- Configure and enable LSP servers
-        -- lua_ls
-        vim.lsp.config("lua_ls", {
-            settings = {
-                Lua = {
-                    diagnostics = {
-                        globals = { "vim" },
-                    },
-                    completion = {
-                        callSnippet = "Replace",
-                    },
-                    workspace = {
-                        library = {
-                            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                            [vim.fn.stdpath("config") .. "/lua"] = true,
-                        },
-                    },
-                },
-            },
-        })
-        vim.lsp.enable("lua_ls")
-
-        -- gopls
-        vim.lsp.config("gopls", {
-            settings = {
-                gopls = {
-                    analyses = {
-                        unusedparams = true,
-                    },
-                    staticcheck = true,
-                    gofumpt = true,
-                },
-            },
-        })
-        vim.lsp.enable("gopls")
-
-        vim.lsp.config("ruff", {
-            capabilities = capabilities,
-            settings = {},
-        })
-        vim.lsp.enable("ruff")
-
-
-        vim.lsp.config("clangd", {
-            settings = {},
-            capabilities = capabilities,
-            filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
-            cmd = {
-                "clangd",
-            },
-        })
-        vim.lsp.enable("clangd")
-    end,
-}
+    })
+else
+    vscode_lsp_remap_callback()
+end
