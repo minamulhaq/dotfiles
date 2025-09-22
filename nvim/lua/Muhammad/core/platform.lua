@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 -- os.lua
 local M = {}
 
@@ -55,6 +56,12 @@ function M.vscode_api.MoveCurrentLineToCenter()
         local line = vim.fn.line(".")
         M.vscode_api.api.call("revealLine", { args = { lineNumber = line, at = "center" } })
     end
+end
+
+function M.vscode_api.add_selection_to_next()
+    M.vscode_api.api.with_insert(function()
+        M.vscode_api.api.action("editor.action.addSelectionToNextFindMatch")
+    end)
 end
 
 return M

@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 local opts = {
     noremap = true,
     silent = true,
@@ -89,7 +90,7 @@ if Platform.is_not_vscode then
 else
     local vscode = Platform.vscode_api.api
     assert(vscode ~= nil, "Vscode detected but api is nil")
-    vscode.notify("Setting up vscode LSP")
+    -- vscode.notify("Setting up vscode LSP")
 
     vim.keymap.set("n", "zz", function()
         Platform.vscode_api.MoveCurrentLineToCenter()
@@ -163,20 +164,9 @@ else
         vscode.action("workbench.actions.view.problems")
     end, opts)
 
-    -- Format document
-    vim.keymap.set({ "n", "v" }, "<leader>fd", function()
-        vscode.action("editor.action.formatDocument")
-    end)
-
-    -- [[
-    -- Add vscode key passthrough for ALT/OPTIONS
-    -- ]]
-    vim.keymap.set({ "n", "x", "i" }, "<M-d>", function()
-        vscode.with_insert(function()
-            vscode.action("editor.action.addSelectionToNextFindMatch")
-        end)
-    end)
-
+    -- IMPORTANT: Add vscode key passthrough for ALT/OPTIONS
+    local key = Platform.is_macos and "<D-d>" or "<M-d>"
+    vim.keymap.set({ "n", "x", "i" }, key, Platform.vscode_api.add_selection_to_next)
 
     vim.keymap.set({ "n", "x" }, "<leader>r", function()
         vscode.with_insert(function()
