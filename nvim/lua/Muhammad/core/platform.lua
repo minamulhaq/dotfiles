@@ -9,7 +9,7 @@ M.is_windows = uname == "Windows_NT"
 M.is_macos = uname == "Darwin"
 M.is_linux = uname == "Linux"
 -- VSCode detection with safe module loading
-M.is_vscode = vim.g.vscode ~= nil
+M.is_vscode = vim.g.vscode
 M.is_not_vscode = vim.g.vscode == nil
 
 
@@ -26,11 +26,14 @@ M.vscode_api = {
 
 
 if M.is_vscode then
+    vim.notify("Setting vscode")
     local ok, vscode = pcall(require, "vscode")
     if ok then
+        vim.notify("Vscode is properly set")
         M.vscode_api.api = vscode
     else
-        vim.notify("VSCode extension not found, but running in VSCode", vim.log.levels.WARN)
+        print("Couldn't set vscode api")
+        M.vscode_api.api = nil
     end
 end
 

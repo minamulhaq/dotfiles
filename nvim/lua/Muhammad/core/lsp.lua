@@ -86,7 +86,7 @@ local function vscode_lsp_remap_callback()
     -- - "grt" is mapped in Normal mode to |vim.lsp.buf.type_definition()|
     -- - "gO" is mapped in Normal mode to |vim.lsp.buf.document_symbol()|
     -- - CTRL-S is mapped in Insert mode to |vim.lsp.buf.signature_help()|
-    local vscode = Platform.vscode_api
+    local vscode = assert(Platform.vscode_api.api)
     vscode.notify("Setting up vscode lsp remaps")
 
     vim.keymap.set({ "n", "x" }, "gra", function()
@@ -199,7 +199,7 @@ if Platform.is_not_vscode then
         signs = {
             text = signs
         },
-        -- virtual_text = true,
+        virtual_text = true,
         update_in_insert = true,
         float = {
             focusable = false,
@@ -210,10 +210,10 @@ if Platform.is_not_vscode then
             header = "",
             prefix = "",
         },
-        virtual_lines = {
-            -- Only show virtual line diagnostics for the current cursor line
-            current_line = true,
-        },
+        -- virtual_lines = {
+        --     -- Only show virtual line diagnostics for the current cursor line
+        --     current_line = true,
+        -- },
 
     })
 else
