@@ -1,9 +1,4 @@
-local vscode = nil
-if vim.g.vscode then
-    vscode = require("vscode")
-end
-
-if not vscode then
+if Platform.is_not_vscode then
     local theme = "gruvbox"
     -- Default options:
     require("gruvbox").setup({

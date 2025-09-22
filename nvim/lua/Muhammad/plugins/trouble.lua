@@ -1,6 +1,6 @@
 return {
     "folke/trouble.nvim",
-    cond = not vim.g.vscode,
+    cond = Platform.is_not_vscode,
     dependencies = {
         "nvim-tree/nvim-web-devicons",
         "folke/todo-comments.nvim",

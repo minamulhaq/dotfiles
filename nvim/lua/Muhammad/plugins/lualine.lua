@@ -1,11 +1,11 @@
 return {
     'nvim-lualine/lualine.nvim',
-    cond = not vim.g.vscode,
-    dependencies = {'nvim-tree/nvim-web-devicons'},
+    cond = Platform.is_not_vscode,
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
         local filename = {
             'filename',
-            file_status=true,
+            file_status = true,
             path = 0
         }
 
@@ -36,18 +36,18 @@ return {
                 }
             },
             sections = {
-                lualine_a = {'mode'},
-                lualine_b = {'branch', 'diff', 'diagnostics', 'nvim_diagnostics', 'nvim_lsp'},
-                lualine_c = {filename},
-                lualine_x = {'encoding', 'fileformat', 'filetype'},
-                lualine_y = {'progress'},
-                lualine_z = {'location'}
+                lualine_a = { 'mode' },
+                lualine_b = { 'branch', 'diff', 'diagnostics', 'nvim_diagnostics', 'nvim_lsp' },
+                lualine_c = { filename },
+                lualine_x = { 'encoding', 'fileformat', 'filetype' },
+                lualine_y = { 'progress' },
+                lualine_z = { 'location' }
             },
             inactive_sections = {
                 lualine_a = {},
                 lualine_b = {},
-                lualine_c = {'filename' },
-                lualine_x = {'location' },
+                lualine_c = { 'filename' },
+                lualine_x = { 'location' },
                 lualine_y = {},
                 lualine_z = {}
             },
@@ -56,6 +56,5 @@ return {
             inactive_winbar = {},
             extensions = {}
         }
-
     end
 }

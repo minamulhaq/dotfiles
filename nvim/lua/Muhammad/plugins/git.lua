@@ -1,7 +1,7 @@
 return {
     {
         "tpope/vim-fugitive",
-        cond = not vim.g.vscode,
+        cond = Platform.is_not_vscode,
         config = function()
             vim.keymap.set("n", "<leader>gg", vim.cmd.Git)
 

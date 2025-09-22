@@ -1,6 +1,7 @@
 return {
-	"minamulhaq/header-guard",
-	config = function()
-		require("header-guard")
-	end,
+    "minamulhaq/header-guard",
+    cond = Platform.is_not_vscode,
+    config = function()
+        require("header-guard")
+    end,
 }

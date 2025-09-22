@@ -1,6 +1,6 @@
 return {
 	"L3MON4D3/LuaSnip",
-	cond = not vim.g.vscode,
+    cond = Platform.is_not_vscode,
 	dependencies = {
 		"saadparwaiz1/cmp_luasnip",
 		"rafamadriz/friendly-snippets",

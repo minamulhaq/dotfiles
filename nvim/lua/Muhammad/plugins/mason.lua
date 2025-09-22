@@ -1,6 +1,6 @@
 return {
     "mason-org/mason.nvim",
-    cond = not vim.g.vscode,
+    cond = Platform.is_not_vscode,
     lazy = false,
     dependencies = {
         "mason-org/mason-lspconfig.nvim",

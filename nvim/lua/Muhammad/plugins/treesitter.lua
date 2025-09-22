@@ -1,6 +1,7 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
+        cond = Platform.is_not_vscode,
         event = { "BufReadPre", "BufNewFile" },
         build = ":TSUpdate",
         config = function()

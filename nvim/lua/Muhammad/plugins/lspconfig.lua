@@ -138,7 +138,7 @@ end
 
 return {
     "neovim/nvim-lspconfig",
-    cond = not vim.g.vscode,
+    cond = Platform.is_not_vscode,
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
         "folke/lazydev.nvim",
