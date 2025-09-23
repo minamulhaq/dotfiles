@@ -173,4 +173,36 @@ else
             vscode.action("editor.action.refactor")
         end)
     end)
+
+    vim.keymap.set("n", "<C-k>", function()
+        vscode.action("editor.action.marker.next")
+    end)
+
+    vim.keymap.set("n", "<C-j>", function()
+        vscode.action("editor.action.marker.prev")
+    end)
+
+
+    vim.keymap.set("n", "<leader>k", function()
+        vscode.action("editor.action.marker.next")
+    end)
+
+    vim.keymap.set("n", "<leader>j", function()
+        vscode.action("editor.action.marker.prev")
+    end)
+
+
+    -- [[
+    -- ESC KEYS : TODO what to close
+    -- {
+    --     "key": "escape",
+    --     "command": "vscode-neovim.send",
+    --     "when": "true",
+    --     "args": "<escape>"
+    -- }
+    -- ]]
+    vim.keymap.set("n", "<Esc>", function()
+        vscode.action("workbench.action.closePanel")
+        vscode.action("workbench.action.closeSidebar")
+    end)
 end

@@ -35,11 +35,11 @@ if Platform.is_not_vscode then
         vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
         vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
-        -- vim.api.nvim_set_hl(0, "StatusLine", { bg = "#32302F", fg = "#d4be98" })
-        -- vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#32302F", fg = "#7d7d7d" })
-        -- -- Add command line highlights to match tmux
-        -- vim.api.nvim_set_hl(0, "CmdLine", { bg = "#32302F", fg = "#d4be98" })
-        -- vim.api.nvim_set_hl(0, "MsgArea", { bg = "#32302F", fg = "#d4be98" })
+        vim.api.nvim_set_hl(0, "StatusLine", { bg = "#32302F", fg = "#d4be98" })
+        vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#32302F", fg = "#7d7d7d" })
+        -- Add command line highlights to match tmux
+        vim.api.nvim_set_hl(0, "CmdLine", { bg = "#32302F", fg = "#d4be98" })
+        vim.api.nvim_set_hl(0, "MsgArea", { bg = "#32302F", fg = "#d4be98" })
     end
 
     ColorMyPencils(theme)
