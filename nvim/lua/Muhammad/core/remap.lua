@@ -78,10 +78,6 @@ if Platform.is_not_vscode then
     -- Example: open netrw in standalone Neovim
     vim.keymap.set("n", "<leader>e", vim.cmd.Ex, opts)
 
-    vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-    vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-    vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-    vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
     vim.keymap.set("n", "Q", "<nop>")
     vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
@@ -116,6 +112,21 @@ else
     end, { noremap = true, silent = true })
 
 
+    --[[
+    -- IMPORTANT TO PASS KEY THROUGH
+    --    {
+        "key": "ctrl+d",
+        "command": "vscode-neovim.send",
+        "args": "<C-d>",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+u",
+        "command": "vscode-neovim.send",
+        "args": "<C-u>",
+        "when": "editorTextFocus"
+    }
+    --]]
     vim.keymap.set("n", "<C-d>", function()
         vscode.eval([[
         const editor = vscode.window.activeTextEditor;
@@ -174,21 +185,25 @@ else
         end)
     end)
 
-    vim.keymap.set("n", "<C-k>", function()
+    -- vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
+    -- vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+    -- vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
+    -- vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+
+    vim.keymap.set("n", "]q", function()
         vscode.action("editor.action.marker.next")
     end)
 
-    vim.keymap.set("n", "<C-j>", function()
+    vim.keymap.set("n", "]l", function()
+        vscode.action("editor.action.marker.nextInFiles")
+    end)
+
+    vim.keymap.set("n", "[q", function()
         vscode.action("editor.action.marker.prev")
     end)
 
-
-    vim.keymap.set("n", "<leader>k", function()
-        vscode.action("editor.action.marker.next")
-    end)
-
-    vim.keymap.set("n", "<leader>j", function()
-        vscode.action("editor.action.marker.prev")
+    vim.keymap.set("n", "[l", function()
+        vscode.action("editor.action.marker.prevInFiles")
     end)
 
 
@@ -202,7 +217,8 @@ else
     -- }
     -- ]]
     vim.keymap.set("n", "<Esc>", function()
+        vscode.action("workbench.action.closeQuickOpen")
         vscode.action("workbench.action.closePanel")
         vscode.action("workbench.action.closeSidebar")
-    end)
+    end, { noremap = true, silent = true })
 end

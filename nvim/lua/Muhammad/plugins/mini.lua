@@ -8,15 +8,6 @@ return {
             require("mini.pairs").setup()
         end,
     },
-    {
-        "echasnovski/mini.bracketed",
-        version = "*", -- Use '*' for the latest stable release
-        cond = Platform.is_not_vscode,
-        event = "VeryLazy",
-        config = function()
-            require("mini.bracketed").setup()
-        end,
-    },
 
     {
         "echasnovski/mini.completion",
