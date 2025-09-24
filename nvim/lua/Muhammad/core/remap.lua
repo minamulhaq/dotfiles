@@ -171,10 +171,6 @@ else
         vscode.action("workbench.view.explorer")
     end, opts)
 
-    vim.keymap.set({ "n", "v" }, "<leader>td", function()
-        vscode.action("workbench.actions.view.problems")
-    end, opts)
-
     -- IMPORTANT: Add vscode key passthrough for ALT/OPTIONS
     local key = Platform.is_macos and "<D-d>" or "<M-d>"
     vim.keymap.set({ "n", "x", "i" }, key, Platform.vscode_api.add_selection_to_next)
