@@ -47,7 +47,9 @@ if Platform.is_not_vscode then
                 harpoon:list():next()
             end, { desc = "Harpoon next" })
 
-            vim.keymap.set("n", "<leader>hd", function() end, { desc = "Harpoon remove" })
+            vim.keymap.set("n", "<leader>hd", function()
+                harpoon:list():remove()
+            end, { desc = "Harpoon remove" })
 
             -- -- basic telescope configuration
             -- local conf = require("telescope.config").values
