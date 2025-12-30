@@ -140,7 +140,7 @@ export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
 export DOCKER_HOST=unix:///Users/muhammadinamulhaq/.docker/run/docker.sock
 
 # Python Env 
-source ~/.venv/3_13/bin/activate
+# source ~/.venv/3_13/bin/activate
 
 # fzf
 export FZF_DEFAULT_COMMAND='rg --files --hidden --glob '"'"'!.git/'"'"
@@ -186,5 +186,6 @@ export FZF_ALT_C_OPTS="
 # Bind Ctrl+Shift+C to fzf directory selection
 
 # [[ -n "$ZSH_POST_INIT" ]] && eval "$ZSH_POST_INIT"
+
 
 export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
