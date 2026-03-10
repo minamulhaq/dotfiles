@@ -1,12 +1,10 @@
 return {
     {
         "ellisonleao/gruvbox.nvim",
-        cond = Platform.is_not_vscode,
         priority = 1000,
         config = function()
-            -- Configure gruvbox with custom options
             require("gruvbox").setup({
-                terminal_colors = true, -- Enable terminal colors
+                terminal_colors = true,
                 undercurl = true,
                 underline = true,
                 bold = true,
@@ -22,23 +20,21 @@ return {
                 invert_signs = false,
                 invert_tabline = false,
                 invert_intend_guides = false,
-                inverse = true,    -- Invert background for search, diffs, statuslines, and errors
-                contrast = "hard", -- Options: "hard", "soft", or empty string
+                inverse = true,
+                contrast = "hard",
                 palette_overrides = {},
                 overrides = {
-                    Normal = { bg = "none" },      -- Transparent background for normal mode
-                    NormalFloat = { bg = "none" }, -- Transparent background for floating windows
+                    Normal = { bg = "none" },
+                    NormalFloat = { bg = "none" },
                 },
                 dim_inactive = false,
-                transparent_mode = true, -- Enable transparency
+                transparent_mode = true,
             })
-            -- vim.cmd([[colorscheme gruvbox]])
         end,
         opts = {},
     },
     {
         "rose-pine/neovim",
-        cond = Platform.is_not_vscode,
         name = "rose-pine",
         config = function()
             -- vim.cmd("colorscheme rose-pine")

@@ -1,6 +1,5 @@
 return {
     'nvim-lualine/lualine.nvim',
-    cond = not vim.g.vscode,
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
         local filename = {
@@ -9,12 +8,10 @@ return {
             path = 0
         }
         local custom_gruvbox = require 'lualine.themes.gruvbox'
-        -- Set your custom colors for the statusline
         custom_gruvbox.normal.c.bg = "#32302F"
         custom_gruvbox.normal.c.fg = "#d4be98"
         custom_gruvbox.inactive.c.bg = "#32302F"
         custom_gruvbox.inactive.c.fg = "#7d7d7d"
-        -- Optionally, set for other modes (insert, visual, etc.) if you want them to match:
         custom_gruvbox.insert.c.bg = "#32302F"
         custom_gruvbox.insert.c.fg = "#d4be98"
         custom_gruvbox.visual.c.bg = "#32302F"
@@ -28,27 +25,14 @@ return {
             options = {
                 icons_enabled = true,
                 theme = custom_gruvbox,
-                component_separators = {
-                    left = '',
-                    right = ''
-                },
-                section_separators = {
-                    left = '',
-                    right = ''
-                },
-                disabled_filetypes = {
-                    statusline = {},
-                    winbar = {}
-                },
+                component_separators = { left = '', right = '' },
+                section_separators = { left = '', right = '' },
+                disabled_filetypes = { statusline = {}, winbar = {} },
                 ignore_focus = {},
                 always_divide_middle = true,
                 always_show_tabline = true,
                 globalstatus = false,
-                refresh = {
-                    statusline = 100,
-                    tabline = 100,
-                    winbar = 100
-                }
+                refresh = { statusline = 100, tabline = 100, winbar = 100 }
             },
             sections = {
                 lualine_a = { 'mode' },

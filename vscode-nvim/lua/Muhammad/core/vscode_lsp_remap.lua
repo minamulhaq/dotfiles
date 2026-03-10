@@ -8,7 +8,6 @@
 -- - "gO" is mapped in Normal mode to |vim.lsp.buf.document_symbol()|
 -- - CTRL-S is mapped in Insert mode to |vim.lsp.buf.signature_help()|
 local vscode = assert(Platform.vscode_api.api)
--- vscode.notify("Setting up vscode lsp remaps")
 
 vim.keymap.set({ "n", "x" }, "gra", function()
     vscode.action("editor.action.quickFix")
@@ -29,7 +28,6 @@ end, { desc = "[VSCode] Find references", noremap = true })
 vim.keymap.set("n", "gri", function()
     vscode.action("editor.action.goToImplementation")
 end, { desc = "[VSCode] Go to implementation", noremap = true })
-
 
 vim.keymap.set("n", "grt", function()
     vscode.action("editor.action.goToTypeDefinition")
@@ -67,8 +65,6 @@ end, {
     silent = true,
     desc = "Find in files for word or selection",
 })
-
--- editor.action.triggerParameterHints
 
 vim.keymap.set("i", "<C-h>", function()
     vscode.action("editor.action.triggerParameterHints")

@@ -8,14 +8,6 @@ return {
         end,
     },
     {
-        "echasnovski/mini.completion",
-        version = "*",
-        event = "VeryLazy",
-        config = function()
-            require("mini.completion").setup()
-        end,
-    },
-    {
         "echasnovski/mini.comment",
         version = "*",
         event = "VeryLazy",

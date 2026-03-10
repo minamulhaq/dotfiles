@@ -1,6 +1,5 @@
 return {
     "hrsh7th/nvim-cmp",
-    cond = Platform.is_not_vscode,
     event = "InsertEnter",
     branch = "main",          -- fix for deprecated functions coming in nvim 0.13
     dependencies = {

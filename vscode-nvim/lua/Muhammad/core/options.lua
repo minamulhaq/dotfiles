@@ -1,16 +1,3 @@
-vim.cmd("let g:netrw_banner = 0")
-vim.opt.nu = true
-vim.opt.rnu = true
-vim.opt.wrap = false
-vim.opt.scrolloff = 8
-vim.opt.termguicolors = true
-vim.opt.background = "dark"
-vim.opt.signcolumn = "yes"
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-vim.opt.backspace = { "start", "eol", "indent" }
-vim.opt.inccommand = "split"
-
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
