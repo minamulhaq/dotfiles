@@ -190,6 +190,11 @@ vim.keymap.set({ "n", "v" }, "<leader>fw", function()
     })
 end, { noremap = true, silent = true, desc = "Find in files for word or selection" })
 
+
+-- Stop output pannel from popping up
+vim.o.cmdheight=10
+
+
 -- ── Trouble equivalents ───────────────────────────────────────────────────────
 vim.keymap.set("n", "<leader>tw", function()
     vscode.action("workbench.actions.view.problems")
