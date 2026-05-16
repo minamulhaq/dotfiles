@@ -37,6 +37,22 @@ vim.keymap.set("n", "gO", function()
     vscode.action("workbench.action.gotoSymbol")
 end, { desc = "[VSCode] Document symbols", noremap = true })
 
+
+-- Find all implementations (opens in references/side view)
+vim.keymap.set("n", "<leader>gi", function()
+    vscode.action("editor.action.peekImplementation") -- or "references-view.findImplementations"
+end, { desc = "[VSCode] Find all implementations", noremap = true })
+
+-- Show Type Hierarchy
+vim.keymap.set("n", "<leader>gT", function()
+    vscode.action("editor.showTypeHierarchy")
+end, { desc = "[VSCode] Show type hierarchy", noremap = true })
+
+-- Show Call Hierarchy
+vim.keymap.set("n", "<leader>gC", function()
+    vscode.action("references-view.showCallHierarchy")
+end, { desc = "[VSCode] Show call hierarchy", noremap = true })
+
 vim.keymap.set("i", "<C-s>", function()
     vscode.action("editor.action.triggerParameterHints")
 end, { desc = "[VSCode] Signature help", noremap = true })
