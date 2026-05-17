@@ -117,11 +117,6 @@ vim.keymap.set("v", "K", function()
     vscode.action("editor.action.moveLinesUpAction")
 end, opts)
 
--- Focus explorer
-vim.keymap.set("n", "<leader>e", function()
-    vscode.action("workbench.view.explorer")
-end, opts)
-
 -- IMPORTANT: Add vscode key passthrough for ALT/OPTIONS
 local key = Platform.is_macos and "<D-d>" or "<M-d>"
 vim.keymap.set({ "n", "x", "i" }, key, Platform.vscode_api.add_selection_to_next)
