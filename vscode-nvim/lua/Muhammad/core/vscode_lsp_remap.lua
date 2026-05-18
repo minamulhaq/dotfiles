@@ -33,29 +33,21 @@ vim.keymap.set("n", "grt", function()
     vscode.action("editor.action.goToTypeDefinition")
 end, { desc = "[VSCode] Go to type definition", noremap = true })
 
-vim.keymap.set("n", "gO", function()
+vim.keymap.set("n", "<leader>fo", function()
     vscode.action("workbench.action.gotoSymbol")
 end, { desc = "[VSCode] Document symbols", noremap = true })
 
 
--- Find all implementations (opens in references/side view)
-vim.keymap.set("n", "<leader>gi", function()
-    vscode.action("editor.action.peekImplementation") -- or "references-view.findImplementations"
-end, { desc = "[VSCode] Find all implementations", noremap = true })
-
 -- Show Type Hierarchy
-vim.keymap.set("n", "<leader>gT", function()
+vim.keymap.set("n", "<leader>gt", function()
     vscode.action("editor.showTypeHierarchy")
 end, { desc = "[VSCode] Show type hierarchy", noremap = true })
 
 -- Show Call Hierarchy
-vim.keymap.set("n", "<leader>gC", function()
+vim.keymap.set("n", "<leader>gc", function()
     vscode.action("references-view.showCallHierarchy")
 end, { desc = "[VSCode] Show call hierarchy", noremap = true })
 
-vim.keymap.set("i", "<C-s>", function()
-    vscode.action("editor.action.triggerParameterHints")
-end, { desc = "[VSCode] Signature help", noremap = true })
 
 vim.keymap.set({ "n", "v" }, "?", function()
     local txt = ""
@@ -81,10 +73,6 @@ end, {
     silent = true,
     desc = "Find in files for word or selection",
 })
-
-vim.keymap.set("i", "<C-h>", function()
-    vscode.action("editor.action.triggerParameterHints")
-end)
 
 -- Format document
 vim.keymap.set({ "n", "v" }, "<leader>fd", function()
