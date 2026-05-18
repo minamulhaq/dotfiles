@@ -117,11 +117,6 @@ vim.keymap.set("v", "K", function()
     vscode.action("editor.action.moveLinesUpAction")
 end, opts)
 
--- Focus explorer
-vim.keymap.set("n", "<leader>e", function()
-    vscode.action("workbench.view.explorer")
-end, opts)
-
 -- IMPORTANT: Add vscode key passthrough for ALT/OPTIONS
 local key = Platform.is_macos and "<D-d>" or "<M-d>"
 vim.keymap.set({ "n", "x", "i" }, key, Platform.vscode_api.add_selection_to_next)
@@ -148,11 +143,14 @@ vim.keymap.set("n", "[l", function()
     vscode.action("editor.action.marker.prevInFiles")
 end)
 
-vim.keymap.set("n", "<Esc>", function()
+
+function ESCAPE_ACTIONS()
     vscode.action("workbench.action.closeQuickOpen")
     vscode.action("workbench.action.closePanel")
     vscode.action("workbench.action.closeSidebar")
-end, { noremap = true, silent = true })
+end
+
+vim.keymap.set("n", "<Esc>", ESCAPE_ACTIONS, { noremap = true, silent = true })
 
 -- ── Telescope equivalents ─────────────────────────────────────────────────────
 vim.keymap.set("n", "<leader>ff", function()
@@ -192,10 +190,33 @@ end, { noremap = true, silent = true, desc = "Find in files for word or selectio
 
 
 -- Stop output pannel from popping up
-vim.o.cmdheight=10
+vim.o.cmdheight = 10
 
 
 -- ── Trouble equivalents ───────────────────────────────────────────────────────
 vim.keymap.set("n", "<leader>tw", function()
     vscode.action("workbench.actions.view.problems")
+end, opts)
+
+-- ── Focus on Explorer View ───────────────────────────────────────────────────────
+vim.keymap.set("n", "<leader>e", function()
+    vscode.action("workbench.view.explorer")
+end, opts)
+
+-- ── Focus on First open Editor ───────────────────────────────────────────────────────
+vim.keymap.set("n", "<leader>i", function()
+    --[[
+    --Add this for passthrough in explorer view
+        {
+        "key": "alt+i",
+        "command": "vscode-neovim.send",
+        "when": "sideBarFocus && neovim.init",
+        "args": "<M-i>"
+        }
+    ]]
+    vscode.action("workbench.action.focusFirstEditorGroup", {
+        callback = function()
+            ESCAPE_ACTIONS()
+        end
+    })
 end, opts)
