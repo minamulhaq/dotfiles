@@ -33,7 +33,7 @@ vim.keymap.set("n", "grt", function()
     vscode.action("editor.action.goToTypeDefinition")
 end, { desc = "[VSCode] Go to type definition", noremap = true })
 
-vim.keymap.set("n", "<leader>fo", function()
+vim.keymap.set("n", "<leader>go", function()
     vscode.action("workbench.action.gotoSymbol")
 end, { desc = "[VSCode] Document symbols", noremap = true })
 
