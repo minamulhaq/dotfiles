@@ -17,12 +17,23 @@ end, {
 })
 
 -- Buf Rename
+
+
+vim.keymap.set("n", "gd", function()
+    vscode.action("editor.action.revealDefinition")
+end, { desc = "[VSCode] Rename symbol", noremap = true })
+
+
 vim.keymap.set("n", "grn", function()
     vscode.action("editor.action.rename")
 end, { desc = "[VSCode] Rename symbol", noremap = true })
 
-vim.keymap.set("n", "grr", function()
+vim.keymap.set("n", "gfr", function()
     vscode.action("references-view.findReferences")
+end, { desc = "[VSCode] Find references", noremap = true })
+
+vim.keymap.set("n", "grr", function()
+    vscode.action("editor.action.goToReferences")
 end, { desc = "[VSCode] Find references", noremap = true })
 
 vim.keymap.set("n", "gri", function()
