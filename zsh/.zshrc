@@ -130,6 +130,8 @@ alias vim="nvim"
 alias vi="nvim"
 alias v="nvim ."
 alias tls="tmux ls"
+alias gs="git log --oneline --pretty --decorate -n 5"
+
 
 alias gl="git log --graph --oneline --decorate"
 
