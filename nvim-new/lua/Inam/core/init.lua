@@ -1,0 +1,5 @@
+_G.Platform = require("Inam.core.platform")
+require("Inam.core.options")
+require("Inam.core.remap")
+require("Inam.core.autocmds")
+require("Inam.core.lsp")
