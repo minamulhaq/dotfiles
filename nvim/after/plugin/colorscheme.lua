@@ -52,3 +52,4 @@ end
 
 -- Apply default scheme
 ColorMyPencils("gruvbox")
+-- ColorMyPencils("rose-pine")

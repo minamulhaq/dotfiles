@@ -37,3 +37,9 @@ vim.pack.add({
         name = "trouble.nvim",
     },
 })
+
+require("Inam.plugins.snacks")
+require("Inam.plugins.mini")
+require("Inam.plugins.fugitive")
+require("Inam.plugins.treesitter")
+require("Inam.plugins.trouble")

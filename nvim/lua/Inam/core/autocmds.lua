@@ -11,3 +11,15 @@ autocmd('TextYankPost', {
     end,
     group = highlight_group,
 })
+
+
+-- Disable mini.completion inside Snacks Picker input
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "snacks_picker_input",
+  callback = function()
+    -- Disable mini.completion for this buffer
+    vim.b.minicompletion_disable = true
+    -- Disable Neovim's native auto-completion flag
+    vim.b.completion = false
+  end,
+})
