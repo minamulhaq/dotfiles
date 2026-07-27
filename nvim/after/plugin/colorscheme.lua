@@ -1,5 +1,12 @@
-local theme = "gruvbox"
-require("gruvbox").setup({
+-- /Users/muhammadinamulhaq/.config/nvim-new/after/plugin/colorscheme.lua
+
+local ok, gruvbox = pcall(require, "gruvbox")
+if not ok then
+    return
+end
+
+-- 1. Plugin Configuration
+gruvbox.setup({
     terminal_colors = true,
     undercurl = true,
     underline = true,
@@ -22,18 +29,26 @@ require("gruvbox").setup({
     dim_inactive = false,
     transparent_mode = true,
 })
-vim.cmd("colorscheme gruvbox")
 
+-- 2. Color Handler & Transparency Overrides
 function ColorMyPencils(color)
     vim.o.background = "dark"
     color = color or "gruvbox"
-    vim.cmd.colorscheme(color)
-    vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-    vim.api.nvim_set_hl(0, "StatusLine", { bg = "#32302F", fg = "#d4be98" })
-    vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#32302F", fg = "#7d7d7d" })
-    vim.api.nvim_set_hl(0, "CmdLine", { bg = "#32302F", fg = "#d4be98" })
-    vim.api.nvim_set_hl(0, "MsgArea", { bg = "#32302F", fg = "#d4be98" })
+    
+    local success = pcall(vim.cmd.colorscheme, color)
+    if not success then
+        return
+    end
+
+    -- Custom Highlight Overrides
+    local hl = vim.api.nvim_set_hl
+    hl(0, "Normal", { bg = "none" })
+    hl(0, "NormalFloat", { bg = "none" })
+    hl(0, "StatusLine", { bg = "#32302F", fg = "#d4be98" })
+    hl(0, "StatusLineNC", { bg = "#32302F", fg = "#7d7d7d" })
+    hl(0, "CmdLine", { bg = "#32302F", fg = "#d4be98" })
+    hl(0, "MsgArea", { bg = "#32302F", fg = "#d4be98" })
 end
 
-ColorMyPencils(theme)
+-- Apply default scheme
+ColorMyPencils("gruvbox")
