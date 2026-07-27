@@ -32,7 +32,12 @@ snacks.setup({
     explorer = { enabled = false },
     indent = { enabled = true },
     input = { enabled = true },
-    picker = { enabled = true },
+    picker = {
+        enabled = true,
+        matcher = {
+            smartcase = false, -- always case-insensitive; mixed-case queries (e.g. "SafetRun100px") still match lowercase/uppercase targets like "...PxRos.cpp"
+        },
+    },
     notifier = { enabled = true },
     quickfile = { enabled = true },
     scope = { enabled = true },

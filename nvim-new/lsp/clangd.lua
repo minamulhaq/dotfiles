@@ -63,7 +63,12 @@ end
 
 ---@type vim.lsp.Config
 return {
-  cmd = { 'clangd' },
+  -- --query-driver whitelists the cross compilers used by this repo's
+  -- non-Native build targets (tricore-gcc, arm-elf-gcc) so clangd is
+  -- willing to invoke them to extract system include paths and builtin
+  -- macros. Without it, clangd falls back to its bundled clang resource
+  -- dir and gets Tricore/ARM-specific headers and intrinsics wrong.
+  cmd = { 'clangd', '--query-driver=/opt/gnutri/bin/*,/opt/gnuarm/bin/*,/usr/bin/g++-*,/usr/bin/gcc-*' },
   filetypes = { 'c', 'c.doxygen', 'cpp', 'cpp.doxygen', 'objc', 'objcpp', 'cuda' },
   root_markers = {
     '.clangd',
