@@ -18,6 +18,50 @@ vim.keymap.set("n", "<leader>u", "<cmd>Undotree<CR>", { desc = "Toggle Undo Tree
 -- greatest remap ever
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
+-- Clipboard: prefer a native OS tool (pbcopy/pbpaste on macOS, win32yank.exe
+-- on WSL, xclip/xsel/wl-copy on Linux) when Platform finds one reachable --
+-- that's a direct subprocess call, so it works the same whether nvim runs
+-- bare or inside tmux. When no native tool is reachable (e.g. inside a
+-- container shell), copy falls back to OSC 52: a one-way escape sequence
+-- that still reaches the real host clipboard through tmux/docker-exec
+-- passthrough. Paste has no such fallback -- OSC 52 paste needs the terminal
+-- to answer a query sequence, which Windows Terminal/Terminal.app/iTerm2
+-- don't support, so it would just hang for ~10s. Instead it fails fast and
+-- tells you to use the terminal's native paste shortcut.
+local osc52 = require("vim.ui.clipboard.osc52")
+
+local function make_copy(reg)
+    local native = Platform.native_copy_cmd()
+    if native then
+        return function(lines)
+            vim.fn.system(native, lines)
+        end
+    end
+    return osc52.copy(reg)
+end
+
+local function make_paste()
+    local native = Platform.native_paste_cmd()
+    if native then
+        return function()
+            return vim.fn.systemlist(native)
+        end
+    end
+    return function()
+        vim.notify(
+            "No system clipboard reader here (e.g. inside a container) -- use the terminal's native paste (Ctrl+Shift+V / Cmd+V) instead",
+            vim.log.levels.WARN
+        )
+        return { "" }
+    end
+end
+
+vim.g.clipboard = {
+    name = "native-or-osc52-copy",
+    copy = { ["+"] = make_copy("+"), ["*"] = make_copy("*") },
+    paste = { ["+"] = make_paste(), ["*"] = make_paste() },
+}
+
 -- Yank to system clipboard
 vim.keymap.set("v", "<leader>y", '"+y', opts)
 vim.keymap.set("n", "<leader>y", '"+yy', opts)
