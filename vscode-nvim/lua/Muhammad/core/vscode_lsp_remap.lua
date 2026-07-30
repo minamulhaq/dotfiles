@@ -11,7 +11,7 @@ local vscode = assert(Platform.vscode_api.api)
 
 
 -- Map key combination to invoke native VS Code relative file path copy action
-vim.keymap.set("n", "<leader>cr", function()
+vim.keymap.set("n", "<leader>1", function()
     -- Dispatch the exact VS Code built-in command ID
     vscode.call("copyRelativeFilePath")
 end, { 
