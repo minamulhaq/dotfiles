@@ -9,6 +9,17 @@
 -- - CTRL-S is mapped in Insert mode to |vim.lsp.buf.signature_help()|
 local vscode = assert(Platform.vscode_api.api)
 
+
+-- Map key combination to invoke native VS Code relative file path copy action
+vim.keymap.set("n", "<leader>cr", function()
+    -- Dispatch the exact VS Code built-in command ID
+    vscode.call("copyRelativeFilePath")
+end, { 
+    desc = "[VSCode] Copy file relative path", 
+    noremap = true,
+    silent = true 
+})
+
 vim.keymap.set({ "n", "x" }, "gra", function()
     vscode.action("editor.action.quickFix")
 end, {
