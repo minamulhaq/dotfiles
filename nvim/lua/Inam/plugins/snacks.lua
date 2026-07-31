@@ -39,3 +39,11 @@ map("n", "<leader>fe", function() snacks.explorer() end, { desc = "File Explorer
 map("n", "gd", function() snacks.picker.lsp_definitions() end, { desc = "LSP Definition" })
 map("n", "gr", function() snacks.picker.lsp_references() end, { desc = "LSP References" })
 map("n", "gi", function() snacks.picker.lsp_implementations() end, { desc = "LSP Implementation" })
+-- Via Snacks Lua API
+vim.keymap.set("n", "<leader>ci", function()
+  Snacks.picker.lsp_incoming_calls()
+end, { desc = "LSP: Incoming Calls" })
+
+vim.keymap.set("n", "<leader>co", function()
+  Snacks.picker.lsp_outgoing_calls()
+end, { desc = "LSP: Outgoing Calls" })
