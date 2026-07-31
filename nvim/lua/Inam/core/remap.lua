@@ -103,3 +103,13 @@ vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+
+
+-- copy fiel relative path
+-- Copy relative path to system clipboard with visual confirmation
+vim.keymap.set("n", "<leader>1", function()
+  -- Force path to be relative to Neovim's current working directory
+  local relative_path = vim.fn.fnamemodify(vim.fn.expand("%"), ":.")
+  vim.fn.setreg("+", relative_path)
+  vim.notify("Copied relative path: " .. relative_path, vim.log.levels.INFO)
+end, { desc = "Copy relative path to clipboard" })
