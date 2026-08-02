@@ -51,6 +51,7 @@ end
 local function enable_lsps()
     vim.lsp.enable('lua_ls')
     vim.lsp.enable('clangd')
+    vim.lsp.enable('bashls')
 end
 
 
