@@ -191,3 +191,17 @@ export FZF_ALT_C_OPTS="
 
 export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
 p14
+
+dock() {
+  local cid
+  cid=$(docker ps -a --format '{{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}' \
+    | fzf --with-nth=2,3,4 --delimiter='\t' --header='container name / image / status' \
+    | cut -f1)
+  [ -n "$cid" ] || return
+
+  docker start "$cid" >/dev/null
+
+  local shell
+  shell=$(docker exec "$cid" sh -c 'command -v bash || command -v sh')
+  docker exec -it "$cid" "$shell"
+}
