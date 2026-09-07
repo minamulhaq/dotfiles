@@ -113,3 +113,11 @@ vim.keymap.set("n", "<leader>1", function()
   vim.fn.setreg("+", relative_path)
   vim.notify("Copied relative path: " .. relative_path, vim.log.levels.INFO)
 end, { desc = "Copy relative path to clipboard" })
+
+-- copy file absolute path
+-- Copy absolute path to system clipboard with visual confirmation
+vim.keymap.set("n", "<leader>2", function()
+  local absolute_path = vim.fn.expand("%:p")
+  vim.fn.setreg("+", absolute_path)
+  vim.notify("Copied absolute path: " .. absolute_path, vim.log.levels.INFO)
+end, { desc = "Copy absolute path to clipboard" })

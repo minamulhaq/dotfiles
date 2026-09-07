@@ -15,9 +15,19 @@ vim.keymap.set("n", "<leader>1", function()
     -- Dispatch the exact VS Code built-in command ID
     vscode.call("copyRelativeFilePath")
 end, { 
-    desc = "[VSCode] Copy file relative path", 
+    desc = "[VSCode] Copy file relative path",
     noremap = true,
-    silent = true 
+    silent = true
+})
+
+-- Map key combination to invoke native VS Code absolute file path copy action
+vim.keymap.set("n", "<leader>2", function()
+    -- Dispatch the exact VS Code built-in command ID
+    vscode.call("copyFilePath")
+end, {
+    desc = "[VSCode] Copy file absolute path",
+    noremap = true,
+    silent = true
 })
 
 vim.keymap.set({ "n", "x" }, "gra", function()
