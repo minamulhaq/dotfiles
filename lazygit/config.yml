@@ -1,0 +1,4 @@
+git:
+  # 'recency' = last checkout order (reflog), 'date' = last commit date, 'alphabetical'
+  localBranchSortOrder: recency
+  remoteBranchSortOrder: date
