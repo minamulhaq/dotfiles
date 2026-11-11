@@ -34,11 +34,12 @@ workspace_picker = "prefix+g"         # swapped with goto
 previous_workspace = "ctrl+shift+alt+k"
 next_workspace = "ctrl+shift+alt+j"
 
-# tmux "prefix v" = copy mode; herdr's equivalent is edit_scrollback.
+# tmux "prefix v" = copy mode. edit_scrollback opens ${EDITOR:-vi} on the buffer.
 # Splits move to tmux's defaults: % = side by side, " = stacked.
-edit_scrollback = "prefix+v"
+copy_mode = "prefix+v"
+edit_scrollback = "prefix+e"
 split_vertical = "prefix+percent"
-split_horizontal = "prefix+quote"
+split_horizontal = 'prefix+"'        # literal "; "quote" means '
 
 previous_tab = "ctrl+alt+h"
 next_tab = "ctrl+alt+l"
